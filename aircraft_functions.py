@@ -1,6 +1,8 @@
 import pandas as pd
 import math
 
+# MANY METHODS SHOULD BE ADDED THE @staticmethod DECORATOR
+
 # Aircraft Class
 class Aircraft():
     def __init__(self, propulsion_system=None, general_aircraft_data=None, general_coefficients=None, longitudinal_dynamic_data=None):
