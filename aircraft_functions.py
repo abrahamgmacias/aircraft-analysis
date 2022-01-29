@@ -76,7 +76,76 @@ class Aerodynamics():
 
         return 0.5*rho*v**2
 
-    
+    # Aircraft Dynamic Pressure
+    def dynamicPressure(self, rho=None, v=None):
+        while self.aircraftCheck():
+            return 0.5*self.ac['flight_envelope']['air_density']*self.ac['flight_envelope']['speed']**2
+
+        return 0.5*rho*v**2
+
+    # Reynolds Number
+    def numReynolds(self, rho, v, MAC, miu):
+        return rho*v*MAC / miu
+
+    # Velocity / Stall Velocity / Vuelo Nivelado
+    def velocity(self, CL, f_flaps, w=None, rho=None, S=None):
+        while self.aircraftCheck():
+            return (2*self.ac['aircraft_specs']['mass']*9.81 / (CL*f_flaps*self.ac['flight_envelope']['air_density']*self.ac['aircraft_specs']['Sw']))**0.5
+        
+        return (2*w / (CL*f_flaps*rho*S))**0.5
+
+    # Velocity / Stall Velocity / Giro Nivelado
+    def stallVelocity(self, CL, n_factor, w=None, rho=None, S=None):
+        while self.aircraftCheck():
+            return (2*self.ac['aircraft_specs']['mass']*9.81*n_factor / (CL*self.ac['flight_envelope']['air_density']*self.ac['aircraft_specs']['Sw']))**0.5
+
+        return (2*w*n_factor / (CL*rho*S))**0.5
+
+    # Lift Coefficient / Vuelo Niveglado / Take Off / Touchdown
+    def liftCoefficient(self, f_flaps, rho, vel, w=None, S=None):
+        while self.aircraftCheck():
+            return 2*self.ac['aircraft_specs']['mass']*self.g / (rho*f_flaps*(vel**2)*self.ac['aircraft_specs']['Sw'])
+
+        return 2*w / (rho*f_flaps*(vel**2)*S) 
+
+    # Lift Force / Vuelo Nivelado / Take Off / Touchdown
+    def liftForce(self, CL, rho=None, S=None, v=None):
+        while self.aircraftCheck():
+            return 0.5*self.ac['flight_envelope']['air_density']*CL*self.ac['aircraft_specs']['Sw']*(self.ac['flight_envelope']['speed']**2)
+
+        return 0.5*rho*CL*S*(v**2)
+
+    # Drag Coefficient / Vuelo Nivelado
+    def dragCoefficient(self, CL, CD_0=None, e=None, AR=None):
+        while self.aircraftCheck():
+            return self.ac['general_coefficients']['CD_0'] + ((CL**2) / (math.pi*self.ac['general_coefficients']['ew']*self.ac['aircraft_specs']['ARw']))
+
+        return CD_0 + (CL**2) / (math.pi*e*AR)
+
+    # Drag Curve Slope
+    def dragCurveSlope(self, CL, e=None, ARw=None, aw=None):
+        while self.aircraftCheck():
+            return self.ac['general_coefficients']['ew']
+            #return (2*CL / (math.pi*self.ac['general_coefficients']['ew']*self.ac['aircraft_specs']['ARw']))*self.ac['general_coefficients']['aw']
+
+        return (2*CL / (math.pi*e*ARw))*aw      
+
+    # Thrust Required to maintain Level Flight
+    def thrustRequired(self, CL, CD):
+        T = self.ac['aircraft_specs']['mass'] / (CL / CD)
+        return round(T, 4)
+
+    # Aircraft Speed given RPM and Thrust
+    def aircraftVelocity(self, rpm, thrust, air_density):
+        try:
+            Ct = self.ac['propulsion'].propeller.ct_factored(thrust, rpm, air_density)
+        except AttributeError:
+            print('Aircraft object has no Propulsion System.')
+            return
+        else:
+            J_coeff = self.ac['propulsion'].propeller.get_coefficient_ratio(Ct, prefix='thrust_coeffs', Ct=True)
+            vel = self.ac['propulsion'].velocity(J_coeff, rpm)   
+            return vel
 
 
 
