@@ -45,7 +45,36 @@ class Aircraft():
             self.temp_data[name] = temp
 
 
+# General Aircraft Functions
+class Aerodynamics():
+    def __init__(self, aircraft=None):
+        self.ac = aircraft.__dict__
+        self.g = 9.81
 
+    def changeUnits(self):
+        self.g = int(input('Gravity: '))
+
+    def addAircraft(self, aircraft):
+        self.ac = aircraft
+
+    def aircraftCheck(self):
+        if self.ac != None:
+            return True
+        else:
+            return False
+
+    def showData(self):
+        while self.aircraftCheck():
+            print(self.ac)
+    
+    # Aircraft Dynamic Pressure
+    def dynamicPressure(self, rho=None, v=None):
+        while self.aircraftCheck():
+            return 0.5*self.ac['flight_envelope']['air_density']*self.ac['flight_envelope']['speed']**2
+
+        return 0.5*rho*v**2
+
+    
 
 
 
