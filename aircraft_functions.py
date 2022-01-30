@@ -148,5 +148,25 @@ class Aerodynamics():
             return vel
 
 
+# rpm_voltage - rpm to voltage ratio
+class Motor():
+    def __init__(self, propeller, max_rpm=None, max_voltage=None, max_amperage=None, rpm_voltage=None):
+        self.propeller = propeller
+        self.max_rpm = max_rpm
+        self.max_voltage = max_voltage
+        self.max_amperage = max_amperage
+        self.rpm_voltage = rpm_voltage
+
+        self.motor_data = self.set_motor_data('motor_data.csv')
+
+    def set_motor_data(self, file):
+        self.motor_data = pd.read_csv(file)
+
+    def get_motor_data(self):
+        return self.motor_data
+
+    def simple_max_power(self):
+        simple_power = self.max_voltage*self.max_amperage
+        return round(simple_power, 4)
 
 
