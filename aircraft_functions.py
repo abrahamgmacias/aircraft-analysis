@@ -223,3 +223,16 @@ class Propeller():
             xy_selected_point = y_points[residuals.index(min(residuals))]
         
         return xy_selected_point
+
+    def prop_efficiency(self, Ct, Cp, advance_ratio):
+        nprop = Ct*advance_ratio / Cp
+        return round(nprop, 4)
+
+    # Check 550 HP - De dónde sale?
+    def cp_factored(self, Ps, air_density, rpm):
+        Cp = 550*(Ps / (air_density*((rpm/60)**3)*((self.diameter/12)**5)))
+        return round(Cp, 4)
+
+    def ct_factored(self, thrust, air_density, rpm):
+        Ct = thrust / (air_density*(rpm**2)*(self.diameter**4))
+        return round(Ct, 4)
