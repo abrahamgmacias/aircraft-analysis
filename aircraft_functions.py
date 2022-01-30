@@ -188,3 +188,38 @@ class Motor():
         v = J*(rpm/60)*(self.propeller.diameter/12)
         return round(v, 4)
 
+
+# English System, correct at the end
+class Propeller():
+    coefficient_location = {'thrust_coeffs': 'thrust_coefficient_', 'power_coeffs': 'power_coefficient_'}
+
+    def __init__(self, diameter, pitch):
+        self.diameter = diameter
+        self.pitch = pitch
+        self.pitch_diameter = pitch/diameter
+
+    def get_propeller_data(self, prefix):
+        return pd.read_csv(f'{prefix}{self.pitch_diameter}.csv')
+
+    # If input: Cp / Ct - output: J (And viceversa) - Handles Parabolas
+    def get_coefficient_ratio(self, value, prefix, Cp=False, Ct=False, J=False):
+        coefficient_data = self.get_propeller_data(Propeller.coefficient_location[prefix])
+        x_points, y_points = coefficient_data['X'], coefficient_data['Y']
+
+        if Cp == True or Ct == True:
+            residuals = [abs(value-y) for y in y_points]
+            residuals_copy = residuals.copy()
+
+            if Cp == True:
+                residuals.sort(reverse=False)
+                x_selected_points_position = [residuals_copy.index(y) for y in residuals[0:2]]
+                xy_selected_point = [x_points[y_position] for y_position in x_selected_points_position]
+
+            if Ct == True:
+                xy_selected_point = x_points[residuals.index(min(residuals))]
+
+        if J == True:
+            residuals = [abs(value-x) for x in x_points]
+            xy_selected_point = y_points[residuals.index(min(residuals))]
+        
+        return xy_selected_point
