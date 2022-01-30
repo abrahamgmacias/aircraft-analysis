@@ -169,4 +169,22 @@ class Motor():
         simple_power = self.max_voltage*self.max_amperage
         return round(simple_power, 4)
 
+    def thrust(self, Ct, air_density, rpm):
+        T = Ct*air_density*((rpm/60)**2)*(self.propeller.diameter/12)**4
+        return round(T, 4)
+
+    def motor_efficiency(self, motor_input):
+        coefficient_data = pd.read_csv('motor_efficiency.csv')
+        x_points, y_points = coefficient_data['X'], coefficient_data['Y']
+        residuals = [motor_input-x for x in x_points if motor_input-x >= 0]
+        y_selected_point = y_points[residuals.index(min(residuals))]
+        return y_selected_point
+
+    def power_s(self, Cp, air_density, rpm):
+        Ps = Cp*air_density*(rpm**3)*(self.propeller.diameter**5)
+        return round(Ps, 4)
+
+    def velocity(self, J, rpm):
+        v = J*(rpm/60)*(self.propeller.diameter/12)
+        return round(v, 4)
 
