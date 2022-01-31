@@ -47,3 +47,23 @@ class Static_Stability(af.Aircraft):
 
     def test(self):
         return self.ac['general_coefficients']['epsilon_0'] + self.ac['general_coefficients']['epsilon_a']
+
+
+# ------- Solver ------- # 
+# Class Instantiation
+sae = ad.sae
+sae_longitudinal = Static_Stability(sae)
+
+# Compute for Cm_0 
+epsilon_0 = sae_longitudinal.epsilonZero()
+epsilon_a = sae_longitudinal.epsilonAlpha()
+sae.addCoefficient(epsilon_0, 'epsilon_0')
+sae.addCoefficient(epsilon_a, 'epsilon_a')
+
+epsilon_0 = sae_longitudinal.epsilonZero()
+epsilon_a = sae_longitudinal.epsilonAlpha()
+sae.addCoefficient(epsilon_0, 'epsilon_0')
+sae.addCoefficient(epsilon_a, 'epsilon_a')
+
+CL_0 = sae_longitudinal.liftCoefZero()
+sae.addCoefficient(CL_0, 'CL_0')
