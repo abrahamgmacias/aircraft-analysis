@@ -34,3 +34,16 @@ class Static_Stability(af.Aircraft):
     def alphaZero(self):
         alpha_0 = -self.ac['general_coefficients']['CL_0'] / self.ac['general_coefficients']['aw']
         return round(alpha_0, 4)
+
+    # Cornell - Eq. 3.17
+    def cmZero(self, alpha_0):
+        cm_0 = self.ac['general_coefficients']['Cm_0w'] - self.ac['aircraft_specs']['n_ef']*self.ac['aircraft_specs']['Vh']*self.ac['general_coefficients']['at']*(self.ac['aircraft_specs']['it'] - self.ac['general_coefficients']['epsilon_0'] + (1-self.ac['general_coefficients']['epsilon_a'])*alpha_0)
+        return round(cm_0, 4)
+
+    # E and R
+    def alphaEquilibrium(self):
+        alpha_e = (-self.ac['general_coefficients']['Cm_0'] / self.ac['general_coefficients']['Cm_a']) - abs(self.ac['aircraft_specs']['alpha_0'])
+        return round(alpha_e, 4)
+
+    def test(self):
+        return self.ac['general_coefficients']['epsilon_0'] + self.ac['general_coefficients']['epsilon_a']
