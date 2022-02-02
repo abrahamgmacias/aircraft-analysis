@@ -1,6 +1,3 @@
-import sys
-# Cambiar dependiendo de la ubicacion de sus archivos
-sys.path.append("D:\Scripts\Python Scripts\SAE-New-Structure\Lib")
 import aircraft_functions as af
 
 
@@ -18,8 +15,10 @@ lat_coeffs = {}
 
 # --------- Extra Computation ---------- # 
 # Class Instantiation
-sae = af.Aircraft(uas, long_coeffs)
-aerodynamics = af.Aerodynamics(sae.__dict__)
+sae = af.Aircraft()
+sae.addWeights(mtow=22)
+sae.addCoefficients(cl_list=[], cd_list=[], cd_0=0.03324, cl_min_d=0, cl_0=0.6096)
 
-#CD_alpha = aerodynamics.dragCurveSlope(0.16)                   # Revisar ; Datos incorrectos - Test
-#sae.addCoefficient(CD_alpha, 'CD_alpha')
+wing = af.Wing('saeWing', 3.71, 0.494, 'MH-114')
+wing.addGeometry(ARw=7.5, Sw=1.831)
+wing.addCoefficients(ew=0.825, )
