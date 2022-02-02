@@ -96,11 +96,22 @@ class Wing():
 
 
 
+from inspect import getsourcefile
+from os.path import abspath
 
-sae = Aircraft()
-sae.addWeights(mtow=22)
-sae.addCoefficients(cl_list=[], cd_list=[], cd_0=0.03324, cl_min_d=0, cl_0=0.6096)
+def locate_dir(folder_name, root=None):
+    # does not handle length error...
+    curr_dir = abspath(getsourcefile(lambda:0))
 
-wing = Wing('saeWing', 3.71, 0.494, 'MH-114')
-wing.addGeometry(ARw=7.5, Sw=1.831)
-wing.addCoefficients(ew=0.825)
+    if root and type(root) == int:
+        split = curr_dir.split("\\")[0:-root]
+        return '\\'.join(split) + f'\\{folder_name}'
+
+    elif root == None:
+        return curr_dir + f'\\{folder_name}'
+
+    else:
+        raise TypeError('Root location must be int.')
+
+
+
