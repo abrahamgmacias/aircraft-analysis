@@ -157,6 +157,50 @@ class Propeller():
         return Ct
 
 
+# rpm_voltage - rpm to voltage ratio
+class Motor():
+    def __init__(self, propeller, max_rpm=None, max_voltage=None, max_amperage=None, rpm_voltage=None):
+        self.propeller = propeller
+        self.max_rpm = max_rpm
+        self.max_voltage = max_voltage
+        self.max_amperage = max_amperage
+        self.rpm_voltage = rpm_voltage
+
+        self.motor_data = self.set_motor_data('motor_data.csv')
+
+    def setMotorData(self, file):
+        self.motor_data = pd.read_csv(file)
+
+    def getMotorData(self):
+        return self.motor_data
+
+    def simpleMaxPower(self):
+        simple_power = self.max_voltage*self.max_amperage
+        return round(simple_power, 4)
+
+    def complexMaxPower(self):
+        complexPower = self.max_rpm*(1/self.rpm_voltage)*self.max_amperage
+        return complexPower
+
+    def thrust(self, Ct, air_density, rpm):
+        T = Ct*air_density*((rpm/60)**2)*(self.propeller.diameter/12)**4
+        return T
+
+    def motorEfficiency(self, motor_input):
+        coefficient_data = pd.read_csv('motor_efficiency.csv')
+        x_points, y_points = coefficient_data['X'], coefficient_data['Y']
+        residuals = [motor_input-x for x in x_points if motor_input-x >= 0]
+        y_selected_point = y_points[residuals.index(min(residuals))]
+        return y_selected_point
+
+    def powerS(self, Cp, air_density, rpm):
+        Ps = Cp*air_density*(rpm**3)*(self.propeller.diameter**5)
+        return Ps
+
+    def velocity(self, J, rpm):
+        v = J*(rpm/60)*(self.propeller.diameter/12)
+        return v
+
 
 from inspect import getsourcefile
 from os.path import abspath
