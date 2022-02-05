@@ -1,3 +1,4 @@
+import pandas as pd
 import math
 
 # General Aircraft Functions
@@ -9,8 +10,8 @@ class Aerodynamics():
 
     # Reynolds Number
     @staticmethod
-    def numReynolds(rho, v, MAC, miu):
-        return rho*v*MAC / miu
+    def numReynolds(rho, v, mac, miu):
+        return rho*v*mac / miu
 
     # Velocity / Stall Velocity / Vuelo Nivelado
     @staticmethod
@@ -46,6 +47,11 @@ class Aerodynamics():
     @staticmethod
     def thrustRequired(mass, CL, CD):
         return mass / (CL / CD)
+
+    # Power Required to maintain Level Flight
+    @staticmethod
+    def powerRequired():
+        pass
 
 
 
