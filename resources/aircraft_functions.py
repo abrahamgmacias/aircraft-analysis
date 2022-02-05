@@ -83,6 +83,13 @@ class Aircraft():
     def getCoefficients(self):
         return self.aeroCoefficients
 
+    def getComponents(self, componentRequested):
+        for component in self.components:
+            if component == componentRequested:
+                return self.components[componentRequested]
+            else:
+                raise NameError(f"No element named '{componentRequested}'...")
+
 
 class Wing():
     def __init__(self, bw, cw, airfoil):
