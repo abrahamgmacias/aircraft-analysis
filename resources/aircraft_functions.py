@@ -99,11 +99,11 @@ class Wing():
     def simpleWingArea(self):
         self.Sw = self.geometry['bw']*self.geometry['cw']
 
-    def addGeometry(self, kwargs):
+    def addGeometry(self, **kwargs):
         self.geometry.update(kwargs)
         return f"'{list(kwargs.keys())[-1]}' parameter was added to wing geometry" 
 
-    def addCoefficients(self, kwargs):
+    def addCoefficients(self, **kwargs):
         self.wingCoefficients.update(kwargs)
         return f"'{list(kwargs.keys())[-1]}' was added to wing coefficients" 
 
@@ -165,8 +165,6 @@ class Motor():
         self.max_voltage = max_voltage
         self.max_amperage = max_amperage
         self.rpm_voltage = rpm_voltage
-
-        self.motor_data = self.set_motor_data('motor_data.csv')
 
     def setMotorData(self, file):
         self.motor_data = pd.read_csv(file)
