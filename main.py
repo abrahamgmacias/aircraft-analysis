@@ -1,4 +1,4 @@
-import resources.aircraft_functions as af
+from resources import aircraft_functions as af
 
 # General Aircraft Data / general_aircraft_data / aircraft_specs
 uas = {'mass': 22, 'ARw': 7.5, 'Sw': 1.831, 'cw': 0.494, 'iw': round(1/57.3, 4), 'St': 0.37, 'lt': 1.48, 
