@@ -6,42 +6,42 @@ import aircraft_funcs as af
 import matplotlib.pyplot as plt
 
 # Aircraft Data
-lf = 0.9        # Longitud del fuselaje - m
-h_cg = 0.2      # Altura del CG al suelo - m
+# lf = 0.9        # Longitud del fuselaje - m
+# h_cg = 0.2      # Altura del CG al suelo - m
 
-# Aceleraciones - m / s2
-a_TO = 2.5035
-a_LA = -0.2912
-μ = 0.05
+# # Aceleraciones - m / s2
+# a_TO = 2.5035
+# a_LA = -0.2912
+# μ = 0.05
 
-# Posiciones - Con respecto a la nariz
-margen = 0.05                               # Margen de movimiento del CG
-h_0x_position = [0.476, 0.520]              # Posiciones del CG
-ng_x = 0.1                                  # Posicion del Nose Gear
-Nose_100 = 15                               # Porcentaje de carga total por el Nose Gear
+# # Posiciones - Con respecto a la nariz
+# margen = 0.05                               # Margen de movimiento del CG
+# h_0x_position = [0.476, 0.520]              # Posiciones del CG
+# ng_x = 0.1                                  # Posicion del Nose Gear
+# Nose_100 = 15                               # Porcentaje de carga total por el Nose Gear
 
-# FOR SECOND FUNCTION
-# Posiciones - Con respecto a la nariz
-dx_cg_h_list = [1.48, 1.436]                                                   # Brazo de palanca - Most forward, most aft CG - m
-dx_acw = 0.4535                                                                # Centro aerodinamico del ala - m 
-dx_ach = 2.0115                                                                # Centro aerodinamico del empenaje - m
+# # FOR SECOND FUNCTION
+# # Posiciones - Con respecto a la nariz
+# dx_cg_h_list = [1.48, 1.436]                                                   # Brazo de palanca - Most forward, most aft CG - m
+# dx_acw = 0.4535                                                                # Centro aerodinamico del ala - m 
+# dx_ach = 2.0115                                                                # Centro aerodinamico del empenaje - m
 
-# Posiciones - Con respecto al centroide del fuselaje
-dy_w_ac = 0.1                                                                  # Centro aerodinamico del ala - m  
-dy_h_ac = dy_w_ac                                                              # Centro aerodinamico del empenaje
-dy_h0 = 0.045                                                                  # Centro de gravedad                                           
+# # Posiciones - Con respecto al centroide del fuselaje
+# dy_w_ac = 0.1                                                                  # Centro aerodinamico del ala - m  
+# dy_h_ac = dy_w_ac                                                              # Centro aerodinamico del empenaje
+# dy_h0 = 0.045                                                                  # Centro de gravedad                                           
 
-# Empennage
-be_bh = 1                                                                      # Span-to-tail ratio - From Table 12.3
-Se_max = -20                                                                   # Deflexion max. - deg - From Table 12.3
+# # Empennage
+# be_bh = 1                                                                      # Span-to-tail ratio - From Table 12.3
+# Se_max = -20                                                                   # Deflexion max. - deg - From Table 12.3
 
-delta_alpha_he = 8.5                                                           # Table 
-graph_actuator = 1
+# delta_alpha_he = 8.5                                                           # Table 
+# graph_actuator = 1
 
-# Yada
-alpha_s = 14                                                                   # Wing stall angle - deg 
-alpha_s_to = alpha_s - iw                                                      # Aircraft stall angle - deg 
-alpha_TO = alpha_s_to - 2                                                      # Aircraft max. TO angle - deg 
+# # Yada
+# alpha_s = 14                                                                   # Wing stall angle - deg 
+# alpha_s_to = alpha_s - iw                                                      # Aircraft stall angle - deg 
+# alpha_TO = alpha_s_to - 2                                                      # Aircraft max. TO angle - deg 
 
 
 # -------------------------------------------- Classes / Functions ------------------------------------------ #
