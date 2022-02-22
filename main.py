@@ -22,4 +22,6 @@ wing.addCoefficients(ew=0.825)
 
 propeller = af.Propeller(12, 12)   # Change data...
 motor = af.Motor(propeller)
+
+sae.addComponents(wing=wing)
 sae.addComponents(motor=motor)

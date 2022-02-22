@@ -1,13 +1,18 @@
 import sys, os
 sys.path.append(os.path.realpath('.'))
 
-from main import sae
+from main import sae, wing, motor
 from resources.aircraft_functions import Aerodynamics as aero
 
 rangoDeVelocidades = []
 
 # Extract data from sae class...
-print(sae.getComponents('motor'))
+Sw = wing.geometry['Sw']
+wto = sae.weights['mtow']   # What if weight varies?
+
+# Non class variables
+rho = 1.225
+
 
 for v in rangoDeVelocidades:
     coefLift = aero.liftCoefficient(wto, rho, v, Sw)
