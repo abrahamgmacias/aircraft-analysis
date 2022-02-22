@@ -1,4 +1,7 @@
-from resources.aircraft_data import sae
+import sys, os
+sys.path.append(os.path.realpath('.'))
+
+from main import sae
 from resources.aircraft_functions import Aerodynamics as aero
 
 rangoDeVelocidades = []
