@@ -1,3 +1,4 @@
+from urllib import request
 import pandas as pd
 import math
 
@@ -80,8 +81,16 @@ class Aircraft():
         self.weights.update(kwargs)
         return f"'{list(kwargs.keys())[-1]}' was added to weights" 
 
-    def getCoefficients(self):
-        return self.aeroCoefficients
+    def getCoefficients(self, *args):
+        if args == ():
+            return self.aeroCoefficients
+        else:
+            requested_data = {}
+            for arg in args:
+                if arg in self.aeroCoefficients.keys():
+                    requested_data[arg] = self.aeroCoefficients[arg]
+            return requested_data
+        
 
     def getComponents(self, componentRequested):
         for component in self.components:
@@ -157,27 +166,25 @@ class Propeller():
         return Ct
 
 
-# rpm_voltage - rpm to voltage ratio
 class Motor():
     def __init__(self, propeller, max_rpm=None, max_voltage=None, max_amperage=None, rpm_voltage=None):
         self.propeller = propeller
-        self.max_rpm = max_rpm
-        self.max_voltage = max_voltage
-        self.max_amperage = max_amperage
-        self.rpm_voltage = rpm_voltage
+
+        self.motorSpecs = {'max_rpm': max_rpm, 'max_voltage': max_voltage,
+                           'max_amperage': max_amperage, 'rpm_voltage': rpm_voltage}
 
     def setMotorData(self, file):
         self.motor_data = pd.read_csv(file)
 
-    def getMotorData(self):
-        return self.motor_data
+    def addData(self):
+        pass
 
     def simpleMaxPower(self):
-        simple_power = self.max_voltage*self.max_amperage
+        simple_power = self.motorSpecs['max_voltage']*self.motorSpecs['max_voltage']
         return round(simple_power, 4)
 
     def complexMaxPower(self):
-        complexPower = self.max_rpm*(1/self.rpm_voltage)*self.max_amperage
+        complexPower = self.motorSpecs['max_rpm']*(1/self.motorSpecs['rpm_voltage'])*self.motorSpecs['max_voltage']
         return complexPower
 
     def thrust(self, Ct, air_density, rpm):
@@ -198,6 +205,7 @@ class Motor():
     def velocity(self, J, rpm):
         v = J*(rpm/60)*(self.propeller.diameter/12)
         return v
+        
 
 
 from inspect import getsourcefile

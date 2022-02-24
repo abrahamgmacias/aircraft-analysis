@@ -4,22 +4,29 @@ sys.path.append(os.path.realpath('.'))
 from main import sae, wing, motor
 from resources.aircraft_functions import Aerodynamics as aero
 
-rangoDeVelocidades = []
 
-# Extract data from sae class...
-Sw = wing.geometry['Sw']
-wto = sae.weights['mtow']   # What if weight varies?
+# Extract data from wing
+Sw, ARw = wing.geometry['Sw'], wing.geometry['ARw']
+ew = wing.wingCoefficients['ew']
+
+# Extract data from aircraft
+wto = sae.weights['mtow']                       # What if weight varies?
+cd_0 = wing.wingCoefficients['cd_0']
+cl_min_d = wing.wingCoefficients['cl_min_d']
+
+# Extract data from motor
+# motor
 
 # Non class variables
 rho = 1.225
 
-
+rangoDeVelocidades = []
 for v in rangoDeVelocidades:
     coefLift = aero.liftCoefficient(wto, rho, v, Sw)
-    coefDrag = aero.dragCoefficient(CD0, coefLift, CL_min_D, ew, ARw)
+    coefDrag = aero.dragCoefficient(cd_0, coefLift, cl_min_d, ew, ARw)
 
     # Def these functions below...
-    alpha = aero.Closest(CL_list, Angles_list, CL)
+    # alpha = aero.Closest(CL_list, Angles_list, CL)
 
     aeroEfficiency = coefLift / coefDrag
     thrustReq = aero.thrustRequired(wto, coefDrag, coefLift)
