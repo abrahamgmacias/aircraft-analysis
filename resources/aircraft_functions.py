@@ -121,13 +121,11 @@ class Wing():
 class Propeller():
     coefficient_location = {'thrust_coeffs': 'thrust_coefficient_', 'power_coeffs': 'power_coefficient_'}
 
-    def __init__(self, diameter, pitch):
-        self.diameter = diameter
-        self.pitch = pitch
-        self.pitch_diameter = pitch/diameter
-
+    def __init__(self, diameter=None, pitch=None):
+        self.propellerSpecs = {'diameter': diameter, 'pitch': pitch, 'pitch_diameter': pitch/diameter}
+        
     def getPropellerData(self, prefix):
-        return pd.read_csv(f'{prefix}{self.pitch_diameter}.csv')
+        return pd.read_csv(f'{prefix}{self.propellerSpecs["pitch_diameter"]}.csv')
 
     # If input: Cp / Ct - output: J (And viceversa) - Handles Parabolas
     def getCoefficientRatio(self, value, prefix, Cp=False, Ct=False, J=False):
@@ -158,11 +156,11 @@ class Propeller():
 
     # Check 550 HP - De dónde sale?
     def cpFactored(self, Ps, air_density, rpm):
-        Cp = 550*(Ps / (air_density*((rpm/60)**3)*((self.diameter/12)**5)))
+        Cp = 550*(Ps / (air_density*((rpm/60)**3)*((self.propellerSpecs['diameter']/12)**5)))
         return Cp
 
     def ctFactored(self, thrust, air_density, rpm):
-        Ct = thrust / (air_density*(rpm**2)*(self.diameter**4))
+        Ct = thrust / (air_density*(rpm**2)*(self.propellerSpecs['diameter']**4))
         return Ct
 
 
