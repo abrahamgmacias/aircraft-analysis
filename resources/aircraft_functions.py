@@ -177,8 +177,9 @@ class Motor():
     def setMotorData(self, file):
         self.motor_data = pd.read_csv(file)
 
-    def addData(self):
-        pass
+    def addSpecs(self, **kwargs):
+        self.motorSpecs.update(kwargs)
+        return f"'{list(kwargs.keys())[-1]}' was added to motorSpecs"
 
     def simpleMaxPower(self):
         simple_power = self.motorSpecs['max_voltage']*self.motorSpecs['max_voltage']
@@ -207,7 +208,6 @@ class Motor():
         v = J*(rpm/60)*(self.propeller.diameter/12)
         return v
         
-
 
 from inspect import getsourcefile
 from os.path import abspath
