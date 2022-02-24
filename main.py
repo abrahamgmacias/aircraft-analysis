@@ -24,7 +24,7 @@ propeller = af.Propeller(12, 12)   # placeholder data
 motor = af.Motor(propeller)
 
 motor.addMotorSpecs(pa_max=32)   # placeholder pa_max
-propeller.addPropellerSpecs(n_ef=0.8)
+propeller.addPropellerSpecs(n_eff=0.8)
 
 sae.addComponents(wing=wing)
 sae.addComponents(motor=motor)

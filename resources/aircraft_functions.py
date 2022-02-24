@@ -94,7 +94,6 @@ class Aircraft():
                     requested_data[arg] = self.aeroCoefficients[arg]
             return requested_data
         
-
     def getComponents(self, componentRequested):
         for component in self.components:
             if component == componentRequested:

@@ -1,7 +1,7 @@
 import sys, os
 sys.path.append(os.path.realpath('.'))
 
-from main import sae, wing, motor
+from main import sae, wing, motor, propeller
 from resources.aircraft_functions import Aerodynamics as aero
 
 
@@ -11,14 +11,16 @@ ew = wing.wingCoefficients['ew']
 
 # Extract data from aircraft
 wto = sae.weights['mtow']                       # What if weight varies?
-cd_0 = wing.wingCoefficients['cd_0']
-cl_min_d = wing.wingCoefficients['cl_min_d']
+cd_0 = sae.aeroCoefficients['cd_0']
+cl_min_d = sae.aeroCoefficients['cl_min_d']
 
-# Extract data from motor
-# motor
+# Extract data from motor and propeller
+pa_max = motor.motorSpecs['pa_max']
+n_eff = propeller.propellerSpecs['n_eff']
 
 # Non class variables
 rho = 1.225
+rho_list = [1.225]
 
 rangoDeVelocidades = []
 for v in rangoDeVelocidades:
@@ -32,8 +34,8 @@ for v in rangoDeVelocidades:
     thrustReq = aero.thrustRequired(wto, coefDrag, coefLift)
     powerReq = aero.powerRequired(thrustReq, v)
 
-    pAvailable = PA_max*n_ef*(rho / rho_list[0])
-    rClimb = af.R_C(PA, PR, wto)
+    powerAvailable = pa_max*n_eff*(rho / rho_list[0])
+    rClimb = aero.rateOfClimb(powerAvailable, powerReq, wto)
 
     # Appending section
 
