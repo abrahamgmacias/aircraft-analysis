@@ -166,6 +166,10 @@ class Propeller():
         Ct = thrust / (air_density*(rpm**2)*(self.propellerSpecs['diameter']**4))
         return Ct
 
+    def addPropellerSpecs(self, **kwargs):
+        self.propellerSpecs.update(kwargs)
+        return f"'{list(kwargs.keys())[-1]}' was added to propellerSpecs"
+
 
 class Motor():
     def __init__(self, propeller, max_rpm=None, max_voltage=None, max_amperage=None, rpm_voltage=None):
@@ -177,7 +181,7 @@ class Motor():
     def setMotorData(self, file):
         self.motor_data = pd.read_csv(file)
 
-    def addSpecs(self, **kwargs):
+    def addMotorSpecs(self, **kwargs):
         self.motorSpecs.update(kwargs)
         return f"'{list(kwargs.keys())[-1]}' was added to motorSpecs"
 
