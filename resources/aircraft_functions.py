@@ -51,9 +51,12 @@ class Aerodynamics():
 
     # Power Required to maintain Level Flight
     @staticmethod
-    def powerRequired():
-        pass
+    def powerRequired(T, v):
+        return T*v
 
+    @staticmethod
+    def rateOfClimb(PA, PR, wto):
+        return (PA - PR) / wto
 
 
 # Aircraft class
