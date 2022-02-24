@@ -20,8 +20,11 @@ wing = af.Wing(3.71, 0.494, 'MH-114')
 wing.addGeometry(ARw=7.5, Sw=1.831)
 wing.addCoefficients(ew=0.825)
 
-propeller = af.Propeller(12, 12)   # Change data...
+propeller = af.Propeller(12, 12)   # placeholder data
 motor = af.Motor(propeller)
+
+motor.addMotorSpecs(pa_max=32)   # placeholder pa_max
+propeller.addPropellerSpecs(n_ef=0.8)
 
 sae.addComponents(wing=wing)
 sae.addComponents(motor=motor)
