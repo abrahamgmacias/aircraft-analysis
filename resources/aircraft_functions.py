@@ -212,6 +212,20 @@ class Motor():
         return v
         
 
+# Placeholder class to append methods to 
+class Atmospheric():
+    air_densities = [1.255]
+
+    def __init__(self, curr_density, curr_temperature=None, curr_height=None):
+        self.air_conditions = {'curr_temperature': curr_temperature, 'curr_density': curr_density,
+                               'curr_height': curr_height}
+
+    def atmosphericRatio(self):
+        return Atmospheric.air_densities[0] / self.air_conditions['curr_density']
+
+
+
+
 from inspect import getsourcefile
 from os.path import abspath
 
