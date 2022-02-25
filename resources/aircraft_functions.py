@@ -95,11 +95,10 @@ class Aircraft():
             return requested_data
         
     def getComponents(self, componentRequested):
-        for component in self.components:
-            if component == componentRequested:
-                return self.components[componentRequested]
-            else:
-                raise NameError(f"No element named '{componentRequested}'...")
+        if componentRequested in self.components:
+            return self.components[componentRequested]
+        else:
+            raise NameError(f"No element named '{componentRequested}'...")
 
 
 class Wing():
