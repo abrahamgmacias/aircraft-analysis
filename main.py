@@ -11,10 +11,10 @@ long_coeffs = {'aw': 4.40637, 'at': 3.63855, 'ew': 0.825, 'Cm_0w': -0.208, 'CL_0
 
 # --------- Extra Computation ---------- # 
 # Class Instantiation
-sae = af.Aircraft()
-sae.addWeights(mtow=22)
-sae.addCoefficients(cl_list=[], cd_list=[])      # Pull from excel file...
-sae.addCoefficients(cd_0=0.03324, cl_min_d=0, cl_0=0.6096)
+general_aircraft = af.Aircraft()
+general_aircraft.addWeights(mtow=22)
+general_aircraft.addCoefficients(cl_list=[], cd_list=[])      # Pull from excel file...
+general_aircraft.addCoefficients(cd_0=0.03324, cl_min_d=0, cl_0=0.6096)
 
 wing = af.Wing(3.71, 0.494, 'MH-114')
 wing.addGeometry(ARw=7.5, Sw=1.831)
@@ -26,5 +26,7 @@ motor = af.Motor(propeller)
 motor.addMotorSpecs(pa_max=32)   # placeholder pa_max
 propeller.addPropellerSpecs(n_eff=0.8)
 
-sae.addComponents(wing=wing)
-sae.addComponents(motor=motor)
+general_aircraft.addComponents(wing=wing)
+general_aircraft.addComponents(motor=motor)
+
+atmosphere = af.Atmospheric(1.225)

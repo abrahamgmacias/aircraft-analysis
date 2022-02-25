@@ -1,29 +1,27 @@
 import sys, os
 sys.path.append(os.path.realpath('.'))
 
-from main import sae, wing, motor, propeller
+import matplotlib.pyplot as plt
+from config import config_data
+from main import general_aircraft, wing, motor, propeller
 from resources.aircraft_functions import Aerodynamics as aero
-
 
 # Extract data from wing
 Sw, ARw = wing.geometry['Sw'], wing.geometry['ARw']
 ew = wing.wingCoefficients['ew']
 
 # Extract data from aircraft
-wto = sae.weights['mtow']                       # What if weight varies?
-cd_0 = sae.aeroCoefficients['cd_0']
-cl_min_d = sae.aeroCoefficients['cl_min_d']
+wto = general_aircraft.weights['mtow']                       # What if weight varies?
+cd_0 = general_aircraft.aeroCoefficients['cd_0']
+cl_min_d = general_aircraft.aeroCoefficients['cl_min_d']
 
 # Extract data from motor and propeller
 pa_max = motor.motorSpecs['pa_max']
 n_eff = propeller.propellerSpecs['n_eff']
 
-# Non class variables
-rho = 1.225
-rho_list = [1.225]
+results = {'power_required': [], 'power_available': []}         # Missing other values
 
-rangoDeVelocidades = []
-for v in rangoDeVelocidades:
+for v in config_data['analyses']['trim_analysis']['parameters']['velocity_range']:
     coefLift = aero.liftCoefficient(wto, rho, v, Sw)
     coefDrag = aero.dragCoefficient(cd_0, coefLift, cl_min_d, ew, ARw)
 
@@ -39,4 +37,7 @@ for v in rangoDeVelocidades:
 
     # Appending section
 
+
 # Plotting section
+if config_data['analyses']['trim_analysis']['plotting'] == True:
+    
