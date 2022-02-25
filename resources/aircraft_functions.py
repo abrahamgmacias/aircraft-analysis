@@ -209,7 +209,10 @@ class Motor():
     def velocity(self, J, rpm):
         v = J*(rpm/60)*(self.propeller.diameter/12)
         return v
-        
+
+    def getPropeller(self):
+        return self.propeller    
+
 
 # Placeholder class to append methods to 
 class Atmospheric():
