@@ -31,15 +31,24 @@ rho = atmosphere.air_conditions['curr_density']
 # Execution section
 trim_results = {}                               # Missing other values
 
+if trim['print_steps'] == True:
+    print('Initializing trim analysis...\n')
+
 for v in parameters['velocity_range']:
+    if trim['print_steps'] == True:
+        print(f'Computing trim @ v = {v} m/s...')
+
     coefLift = aero.liftCoefficient(wto, rho, v, sw)
     coefDrag = aero.dragCoefficient(coefLift, cd0, ew, arw)
 
     aeroEfficiency = coefLift / coefDrag
     try:
         thrustReq = aero.thrustRequired(wto, coefDrag, coefLift)
+
     except ZeroDivisionError:
-        pass
+        if trim['print_steps'] == True:
+            print(f'v = {v} m/s produces computing error...')
+
     else:
         powerReq = aero.powerRequired(thrustReq, v)
         powerAvail = paMax*nEff*atmosphere.atmosphericRatio()
@@ -48,7 +57,11 @@ for v in parameters['velocity_range']:
         # Appending section
         trim_results[v] = (coefLift, coefDrag, thrustReq, powerReq, powerAvail, rClimb)
 
+if (len(trim_results.keys()) > 0) and (trim['print_steps'] == True):
+    print('\nAnalysis finished, check results...')
+
 if trim['print_results']:
+    print('')
     print(trim_results)
 
 # Plotting section
