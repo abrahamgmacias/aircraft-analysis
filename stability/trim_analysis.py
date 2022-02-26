@@ -12,41 +12,49 @@ parameters = trim['parameters']
 # Data extraction section
 aircraft = config_data['aircraft']
 wto = aircraft.weights['mtow']                       # What if weight varies?
-cd_0 = aircraft.aeroCoefficients['cd_0']
-cl_min_d = aircraft.aeroCoefficients['cl_min_d']
+cd0 = aircraft.aeroCoefficients['cd_0']
+clMinD = aircraft.aeroCoefficients['cl_min_d']
 
 wing = aircraft.getComponents('wing')
 sw, arw = wing.geometry['Sw'], wing.geometry['ARw']
 ew = wing.wingCoefficients['ew']
 
 motor = aircraft.getComponents('motor')
-pa_max = motor.motorSpecs['pa_max']
+paMax = motor.motorSpecs['pa_max']
 
 propeller = motor.getPropeller()
-n_eff = propeller.propellerSpecs['n_eff']
+nEff = propeller.propellerSpecs['n_eff']
 
-rho = parameters['atmospheric_conditions']
+atmosphere = parameters['atmospheric_conditions']
+rho = atmosphere.air_conditions['curr_density']
 
 # Execution section
-results = {'power_required': [], 'power_available': []}         # Missing other values
+trim_results = {}                               # Missing other values
 
 for v in parameters['velocity_range']:
     coefLift = aero.liftCoefficient(wto, rho, v, sw)
-    coefDrag = aero.dragCoefficient(cd_0, coefLift, cl_min_d, ew, arw)
-
-    # Def these functions below...
-    # alpha = aero.Closest(CL_list, Angles_list, CL)
+    coefDrag = aero.dragCoefficient(coefLift, cd0, ew, arw)
 
     aeroEfficiency = coefLift / coefDrag
-    thrustReq = aero.thrustRequired(wto, coefDrag, coefLift)
-    powerReq = aero.powerRequired(thrustReq, v)
+    try:
+        thrustReq = aero.thrustRequired(wto, coefDrag, coefLift)
+    except ZeroDivisionError:
+        pass
+    else:
+        powerReq = aero.powerRequired(thrustReq, v)
+        powerAvail = paMax*nEff*atmosphere.atmosphericRatio()
+        rClimb = aero.rateOfClimb(powerAvail, powerReq, wto)
 
-    powerAvailable = pa_max*n_eff*(rho.atmosphericRatio())
-    rClimb = aero.rateOfClimb(powerAvailable, powerReq, wto)
+        # Appending section
+        trim_results[v] = (coefLift, coefDrag, thrustReq, powerReq, powerAvail, rClimb)
 
-    # Appending section
-
+if trim['print_results']:
+    print(trim_results)
 
 # Plotting section
 if trim['plotting'] == True:
     pass
+
+
+
+# Handle division by zeroes given null velocity
