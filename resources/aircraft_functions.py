@@ -84,15 +84,29 @@ class Aircraft():
         self.weights.update(kwargs)
         return f"'{list(kwargs.keys())[-1]}' was added to weights" 
 
-    def getCoefficients(self, *args):
+    def getCoefficients(self, *args, dict=False):
+        object_to_return = []
+        if dict == True:
+                object_to_return = {}
+
         if args == ():
-            return self.aeroCoefficients
+            if dict == False:
+                for element in self.aeroCoefficients:
+                    object_to_return += [self.aeroCoefficients[element]]
+                return object_to_return
+
+            else:
+                return self.aeroCoefficients
+
         else:
-            requested_data = {}
             for arg in args:
-                if arg in self.aeroCoefficients.keys():
-                    requested_data[arg] = self.aeroCoefficients[arg]
-            return requested_data
+                if arg in self.aeroCoefficients:
+                    if dict == False:
+                        object_to_return += [self.aeroCoefficients[arg]]
+                    else:
+                        object_to_return[arg] = self.aeroCoefficients[arg]
+                 
+            return object_to_return
         
     def getComponents(self, componentRequested):
         if componentRequested in self.components:
@@ -228,9 +242,11 @@ class Atmospheric():
         return Atmospheric.air_densities[0] / self.air_conditions['curr_density']
 
 
+
 class StaticStability():
     def __init__(self, aircraft):
         self.ac = aircraft
+        self.ac_coefficients = aircraft.aeroCoefficients
 
     # Cornell
     def cmAlpha(self):
@@ -264,3 +280,44 @@ class StaticStability():
     def alphaEquilibrium(self):
         alpha_e = (-self.ac['general_coefficients']['Cm_0'] / self.ac['general_coefficients']['Cm_a']) - abs(self.ac['aircraft_specs']['alpha_0'])
         return round(alpha_e, 4)
+
+
+
+
+# class StaticStability():
+#     def __init__(self, aircraft):
+#         self.ac = aircraft
+#         self.ac_coefficients = aircraft.aeroCoefficients
+
+#     # Cornell
+#     def cmAlpha(self):
+#         cm_a  = (self.ac['aircraft_specs']['x_cg_cw'] - self.ac['aircraft_specs']['x_ac_cw'])*self.ac['general_coefficients']['aw'] - self.ac['aircraft_specs']['n_ef']*self.ac['aircraft_specs']['Vh']*self.ac['general_coefficients']['at']*(1-self.ac['general_coefficients']['epsilon_a'])
+#         return cm_a
+
+#     # Epsilon @ AoA = 0
+#     def epsilonZero(self): 
+#         epsilon_0 = 2*self.ac['general_coefficients']['CL_0w'] / (self.ac['aircraft_specs']['ARw']*math.pi) 
+#         return round(epsilon_0, 4)
+
+#     # Epsilon In Function of AoA - dE/alpha - Downwash - 1/rad
+#     def epsilonAlpha(self):
+#         epsilon_alpha = 2*self.ac['general_coefficients']['aw'] / (self.ac['aircraft_specs']['ARw']*math.pi)
+#         return round(epsilon_alpha, 4)
+
+#     def liftCoefZero(self):
+#         CL_0 = self.ac['general_coefficients']['aw']*(self.ac['aircraft_specs']['iw'] - self.ac['aircraft_specs']['alpha_0w']) + self.ac['aircraft_specs']['n_ef']*(self.ac['aircraft_specs']['St']/self.ac['aircraft_specs']['Sw'])*self.ac['general_coefficients']['at']*(self.ac['aircraft_specs']['it'] - self.ac['general_coefficients']['epsilon_0'])
+#         return round(CL_0, 4)
+
+#     def alphaZero(self):
+#         alpha_0 = -self.ac['general_coefficients']['CL_0'] / self.ac['general_coefficients']['aw']
+#         return round(alpha_0, 4)
+
+#     # Cornell - Eq. 3.17
+#     def cmZero(self, alpha_0):
+#         cm_0 = self.ac['general_coefficients']['Cm_0w'] - self.ac['aircraft_specs']['n_ef']*self.ac['aircraft_specs']['Vh']*self.ac['general_coefficients']['at']*(self.ac['aircraft_specs']['it'] - self.ac['general_coefficients']['epsilon_0'] + (1-self.ac['general_coefficients']['epsilon_a'])*alpha_0)
+#         return round(cm_0, 4)
+
+#     # E and R
+#     def alphaEquilibrium(self):
+#         alpha_e = (-self.ac['general_coefficients']['Cm_0'] / self.ac['general_coefficients']['Cm_a']) - abs(self.ac['aircraft_specs']['alpha_0'])
+#         return round(alpha_e, 4)
