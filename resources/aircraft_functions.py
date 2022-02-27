@@ -226,10 +226,9 @@ class Atmospheric():
         return Atmospheric.air_densities[0] / self.air_conditions['curr_density']
 
 
-class Static_Stability(Aircraft):
-    def __init__(self, aircraft_obj):
-        super().__init__(ad.uas, ad.long_coeffs)
-        self.ac = aircraft_obj.__dict__
+class StaticStability():
+    def __init__(self, aircraft):
+        self.ac = aircraft
 
     # Cornell
     def cmAlpha(self):
@@ -263,28 +262,3 @@ class Static_Stability(Aircraft):
     def alphaEquilibrium(self):
         alpha_e = (-self.ac['general_coefficients']['Cm_0'] / self.ac['general_coefficients']['Cm_a']) - abs(self.ac['aircraft_specs']['alpha_0'])
         return round(alpha_e, 4)
-
-    def test(self):
-        return self.ac['general_coefficients']['epsilon_0'] + self.ac['general_coefficients']['epsilon_a']
-
-
-
-from inspect import getsourcefile
-from os.path import abspath
-
-def locate_dir(folder_name, root=None):
-    # does not handle length error...
-    curr_dir = abspath(getsourcefile(lambda:0))
-
-    if root and type(root) == int:
-        split = curr_dir.split("\\")[0:-root]
-        return '\\'.join(split) + f'\\{folder_name}'
-
-    elif root == None:
-        return curr_dir + f'\\{folder_name}'
-
-    else:
-        raise TypeError('Root location must be int.')
-
-
-
