@@ -1,8 +1,5 @@
 from resources import aircraft_functions as af
 
-
-
-
 # --------- Extra Computation ---------- # 
 # Class Instantiation
 general_aircraft = af.Aircraft()
