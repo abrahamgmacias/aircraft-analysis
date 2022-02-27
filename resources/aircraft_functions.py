@@ -101,10 +101,12 @@ class Aircraft():
             raise NameError(f"No element named '{componentRequested}'...")
 
 
+# Description can be removed if a tail class is created
 class Wing():
-    def __init__(self, bw, cw, airfoil):
+    def __init__(self, bw=None, cw=None, airfoil=None, description=None):
         self.geometry = {'bw': bw, 'cw': cw, 'airfoil': airfoil}
         self.wingCoefficients = {}
+        self.description = description
 
     def simpleWingArea(self):
         self.Sw = self.geometry['bw']*self.geometry['cw']
