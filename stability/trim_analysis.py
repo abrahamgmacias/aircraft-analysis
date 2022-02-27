@@ -90,8 +90,3 @@ if trim['plotting'] == True:
     plt.plot(parameters['velocity_range'], required_list)
     plt.plot(parameters['velocity_range'], available_list)
     plt.show()
-
-
-
-# Handle division by zeroes given null velocity
-print(len(parameters['velocity_range']), len(required_list), len(available_list))
