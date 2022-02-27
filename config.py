@@ -1,3 +1,4 @@
+from re import M
 from main import *
 
 
@@ -16,6 +17,12 @@ config_data = {
                                                 'plotting': False,
                                                 'print_results': False,
                                                 'print_steps': False
+                            },
+
+                            'static_analysis': {
+                                                 'parameters': {},
+                                                 'print_results': False,
+                                                 'print_steps': False
                             }
             }
 }
