@@ -11,7 +11,7 @@ config_data = {
                             'trim_analysis': {
                                                 'parameters': {
                                                                 'atmospheric_conditions': atmosphere,
-                                                                'velocity_range': range(0, 8)
+                                                                'velocity_range': list(range(0, 8))
                                                 },
                                                 'plotting': False,
                                                 'print_results': False,
