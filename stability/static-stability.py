@@ -1,37 +1,34 @@
-import sys
-import math 
-# Cambiar para CWD
-sys.path.append("D:\Scripts\Python Scripts\SAE-New-Structure\Lib")   
-import aircraft_functions as af 
-import aircraft_data as ad
+import math
+import sys, os
+sys.path.append(os.path.realpath('.'))
+from config import config_data
+from resources.aircraft_functions import StaticStability as static
 
+# Config data
+trim = config_data['analyses']['static_analysis']
+parameters = trim['parameters']
 
-# Class Instantiation
-sae = ad.sae
-sae_longitudinal = Static_Stability(sae)
+# Data extraction section
+aircraft = config_data['aircraft']
+longitudinal = static(aircraft)
 
 # Compute for Cm_0 
-epsilon_0 = sae_longitudinal.epsilonZero()
-epsilon_a = sae_longitudinal.epsilonAlpha()
-sae.addCoefficient(epsilon_0, 'epsilon_0')
-sae.addCoefficient(epsilon_a, 'epsilon_a')
+epsilon0 = longitudinal.epsilonZero()
+epsilonA = longitudinal.epsilonAlpha()
+aircraft.addCoefficients(epsilon0=epsilon0, epsilonA=epsilonA)
 
-epsilon_0 = sae_longitudinal.epsilonZero()
-epsilon_a = sae_longitudinal.epsilonAlpha()
-sae.addCoefficient(epsilon_0, 'epsilon_0')
-sae.addCoefficient(epsilon_a, 'epsilon_a')
+cl0 = longitudinal.liftCoefZero()
+aircraft.addCoefficients(cl0=cl0)
 
-CL_0 = sae_longitudinal.liftCoefZero()
-sae.addCoefficient(CL_0, 'CL_0')
+alpha0 = longitudinal.alphaZero()
+aircraft.addCoefficients(alpha0=alpha0)
 
-alpha_0 = sae_longitudinal.alphaZero()
-sae.addSpec(alpha_0, 'alpha_0')
-cm_0 = sae_longitudinal.cmZero(alpha_0)
-sae.addCoefficient(cm_0, 'Cm_0')
+cm0 = longitudinal.cmZero(alpha0)
+aircraft.addCoefficients(cm0=cm0)
 
 # Compute for Cm_alpha
-cm_a = sae_longitudinal.cmAlpha() 
-sae.addCoefficient(cm_a, 'Cm_a')
+cmA = longitudinal.cmAlpha() 
 
 # Compute Equilibrium Angle - deg
-a_e = sae_longitudinal.alphaEquilibrium()*57.3
+aE = longitudinal.alphaEquilibrium()*57.3
+aircraft.addCoefficients(cmA=cmA, aE=aE)
