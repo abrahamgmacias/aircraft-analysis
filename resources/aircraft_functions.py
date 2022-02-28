@@ -131,7 +131,31 @@ class Wing():
 
     def addCoefficients(self, **kwargs):
         self.wingCoefficients.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' was added to wing coefficients" 
+        return f"'{list(kwargs.keys())[-1]}' was added to wing coefficients"
+        
+    def getCoefficients(self, *args, dict=False):
+        object_to_return = []
+        if dict == True:
+                object_to_return = {}
+
+        if args == ():
+            if dict == False:
+                for element in self.wingCoefficients:
+                    object_to_return += [self.wingCoefficients[element]]
+                return object_to_return
+
+            else:
+                return self.wingCoefficients
+
+        else:
+            for arg in args:
+                if arg in self.wingCoefficients:
+                    if dict == False:
+                        object_to_return += [self.wingCoefficients[arg]]
+                    else:
+                        object_to_return[arg] = self.wingCoefficients[arg]
+                 
+            return object_to_return
 
 
 # English System, correct at the end
@@ -243,14 +267,23 @@ class Atmospheric():
 
 
 
-class StaticStability():
+class LongitudinalStaticStability():
     def __init__(self, aircraft):
         self.ac = aircraft
-        self.ac_coefficients = aircraft.aeroCoefficients
+        self.acCoefficients = aircraft.aeroCoefficients
+
+    def setTail(self, tailName):
+        self.acTail = self.ac.getComponents(tailName)
+        self.acTailCoefficients = self.acTail.wingCoefficients
+        return 'Tail object has been set.'
 
     # Cornell
     def cmAlpha(self):
-        cm_a  = (self.ac['aircraft_specs']['x_cg_cw'] - self.ac['aircraft_specs']['x_ac_cw'])*self.ac['general_coefficients']['aw'] - self.ac['aircraft_specs']['n_ef']*self.ac['aircraft_specs']['Vh']*self.ac['general_coefficients']['at']*(1-self.ac['general_coefficients']['epsilon_a'])
+        staticMargin = self.ac_coefficients['x_cg_cw'] - self.ac_coefficients['x_ac_cw']
+
+
+
+        cm_a  = staticMargin*self.ac_coefficients['aw'] - self.ac['aircraft_specs']['n_ef']*self.ac['aircraft_specs']['Vh']*self.ac['general_coefficients']['at']*(1-self.ac['general_coefficients']['epsilon_a'])
         return cm_a
 
     # Epsilon @ AoA = 0
