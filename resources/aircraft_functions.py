@@ -108,11 +108,21 @@ class Aircraft():
                  
             return object_to_return
         
-    def getComponents(self, componentRequested):
-        if componentRequested in self.components:
-            return self.components[componentRequested]
-        else:
-            raise NameError(f"No element named '{componentRequested}'...")
+    def getComponents(self, *args, dict=False): 
+        objectToReturn = []
+        if dict == True:
+            objectToReturn = {}
+
+        for arg in args:
+            if arg in self.components:
+                element = self.components[arg]
+                if dict == False:
+                    objectToReturn += [element]
+                else:
+                    objectToReturn[arg] = element
+
+        return objectToReturn
+
 
 
 # Description can be removed if a tail class is created
