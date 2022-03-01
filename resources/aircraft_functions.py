@@ -290,8 +290,13 @@ class LongitudinalStaticStability():
     def setWing(self, wingName):
         self.acWing = self.ac.getComponents(wingName)
         self.acWingCoefficients = self.acWing.wingCoefficients
-        return 'Wing object has been set properly. '
+        return 'Wing object has been set properly.'
 
+    def setMotor(self, motorName):
+        self.acMotor = self.ac.getComponents(motorName)
+        self.acMotorCoefficients = self.acMotor.wingCoefficients
+        return 'Wing object has been set properly.'
+    
     # Cornell
     def cmAlpha(self):
         staticMargin = self.ac_coefficients['x_cg_cw'] - self.ac_coefficients['x_ac_cw']
