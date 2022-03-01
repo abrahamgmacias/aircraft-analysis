@@ -283,17 +283,17 @@ class LongitudinalStaticStability():
         self.acCoefficients = aircraft.aeroCoefficients
 
     def setTail(self, tailName):
-        self.acTail = self.ac.getComponents(tailName)
+        self.acTail = self.ac.getComponents(tailName)[0]
         self.acTailCoefficients = self.acTail.wingCoefficients
         return 'Tail object has been set properly.'
 
     def setWing(self, wingName):
-        self.acWing = self.ac.getComponents(wingName)
+        self.acWing = self.ac.getComponents(wingName)[0]
         self.acWingCoefficients = self.acWing.wingCoefficients
         return 'Wing object has been set properly.'
 
     def setMotor(self, motorName):
-        self.acMotor = self.ac.getComponents(motorName)
+        self.acMotor = self.ac.getComponents(motorName)[0]
         self.acMotorCoefficients = self.acMotor.wingCoefficients
         return 'Wing object has been set properly.'
     
