@@ -285,11 +285,13 @@ class LongitudinalStaticStability():
     def setTail(self, tailName):
         self.acTail = self.ac.getComponents(tailName)[0]
         self.acTailCoefficients = self.acTail.wingCoefficients
+        self.acWingGeometry = self.acTail.geometry
         return 'Tail object has been set properly.'
 
     def setWing(self, wingName):
         self.acWing = self.ac.getComponents(wingName)[0]
         self.acWingCoefficients = self.acWing.wingCoefficients
+        self.acWingGeometry = self.acWing.geometry
         return 'Wing object has been set properly.'
 
     def setMotor(self, motorName):
@@ -305,14 +307,14 @@ class LongitudinalStaticStability():
 
     # Epsilon @ AoA = 0
     def epsilonZero(self): 
-        cl_0w = self.acWing.getCoefficients('cl_0w')[0]
-        epsilon_0 = 2*cl_0w / (self.acWing.geometry['arw']*math.pi) 
+        cl_0w = self.acWingCoefficients['cl_0w']
+        epsilon_0 = 2*cl_0w / (self.acWingGeometry['arw']*math.pi) 
         return round(epsilon_0, 4)
 
     # Epsilon In Function of AoA - dE/alpha - Downwash - 1/rad
     def epsilonAlpha(self):
-        aw = self.acWingCoefficients.getCoefficients('aw')[0]
-        epsilon_alpha = 2*aw / (self.acWing.geometry['arw']*math.pi)
+        aw = self.acWingCoefficients['aw']
+        epsilon_alpha = 2*aw / (self.acWingGeometry['arw']*math.pi)
         return round(epsilon_alpha, 4)
 
     def liftCoefZero(self):

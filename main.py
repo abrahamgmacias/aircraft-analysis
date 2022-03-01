@@ -19,9 +19,6 @@ motor = af.Motor(propeller)
 motor.addMotorSpecs(pa_max=32)   # placeholder pa_max
 propeller.addPropellerSpecs(n_eff=0.95)
 
-general_aircraft.addComponents(wing=wing)
-general_aircraft.addComponents(motor=motor)
-
 atmosphere = af.Atmospheric(1.225)
 
 # Data appending for static_stability.py
@@ -30,8 +27,7 @@ horizontal_stab = af.Wing(description='Horizontal Stabilizer')
 horizontal_stab.addGeometry(st=0.37, lt=1.48, it=round(-2.5/57.3, 4))
 horizontal_stab.addCoefficients(vh=0.6, at=3.6385)
 
-wing.addCoefficients(alpha_0w=round(-7.8/57.3, 4))
-wing.addCoefficients(aw=4.4063, ew=0.825, cm_0w=-0.208, cl_0w=0.62)
+wing.addCoefficients(aw=4.4063, ew=0.825, cm_0w=-0.208, cl_0w=0.62, alpha_0w=round(-7.8/57.3, 4))
 
-general_aircraft.addCoefficients(x_cg_cw=0.2834, x_ac_cw=0.25)
-general_aircraft.addCoefficients(cl_0=0.6096, cd_0=0.03324)
+general_aircraft.addCoefficients(x_cg_cw=0.2834, x_ac_cw=0.25, cl_0=0.6096, cd_0=0.03324)
+general_aircraft.addComponents(wing=wing, motor=motor, h_stabilizer=horizontal_stab)
