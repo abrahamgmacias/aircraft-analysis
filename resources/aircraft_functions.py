@@ -305,14 +305,14 @@ class LongitudinalStaticStability():
 
     # Epsilon @ AoA = 0
     def epsilonZero(self): 
-        cl_0w, arw = self.acWingCoefficients.getCoefficients('cl0w', 'arw')
-        epsilon_0 = 2*cl_0w / (arw*math.pi) 
+        cl_0w = self.acWing.getCoefficients('cl_0w')[0]
+        epsilon_0 = 2*cl_0w / (self.acWing.geometry['arw']*math.pi) 
         return round(epsilon_0, 4)
 
     # Epsilon In Function of AoA - dE/alpha - Downwash - 1/rad
     def epsilonAlpha(self):
-        aw, arw = self.acWingCoefficients.getCoefficients('aw', 'arw')
-        epsilon_alpha = 2*aw / (arw*math.pi)
+        aw = self.acWingCoefficients.getCoefficients('aw')[0]
+        epsilon_alpha = 2*aw / (self.acWing.geometry['arw']*math.pi)
         return round(epsilon_alpha, 4)
 
     def liftCoefZero(self):
