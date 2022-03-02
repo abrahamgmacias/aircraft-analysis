@@ -167,6 +167,30 @@ class Wing():
                  
             return object_to_return
 
+    def getGeometry(self, *args, dict=False):
+        object_to_return = []
+        if dict == True:
+                object_to_return = {}
+
+        if args == ():
+            if dict == False:
+                for element in self.geometry:
+                    object_to_return += [self.geometry[element]]
+                return object_to_return
+
+            else:
+                return self.geometry
+
+        else:
+            for arg in args:
+                if arg in self.geometry:
+                    if dict == False:
+                        object_to_return += [self.geometry[arg]]
+                    else:
+                        object_to_return[arg] = self.geometry[arg]
+                 
+            return object_to_return
+
 
 # English System, correct at the end
 class Propeller():
@@ -336,6 +360,14 @@ class LongitudinalStaticStability():
         return round(alpha_e, 4)
 
 
+
+# aw, alpha_0w = self.acWing.getCoefficients('aw', 'alpha_0w')
+#         at = self.acTail.getCoefficients('at')
+#         # st, it = 
+#         # n_ef = 
+
+#         # CL_0 = aw*(self.ac['aircraft_specs']['iw'] - alpha_0w) + self.ac['aircraft_specs']['n_ef']*(self.ac['aircraft_specs']['St']/self.ac['aircraft_specs']['Sw'])*at*(self.ac['aircraft_specs']['it'] - self.ac['general_coefficients']['epsilon_0'])
+#         # return round(CL_0, 4)
 
 
 # class StaticStability():
