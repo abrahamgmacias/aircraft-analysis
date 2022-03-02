@@ -15,14 +15,13 @@ longitudinal = staticLong(aircraft)
 # Can be removed if standardized...
 longitudinal.setTail('h_stabilizer')
 longitudinal.setWing('wing')
+longitudinal.setMotor('motor')
 
 # # Compute for Cm_0 
 epsilon0 = longitudinal.epsilonZero()
 epsilonA = longitudinal.epsilonAlpha()
-aircraft.addCoefficients(epsilon0=epsilon0, epsilonA=epsilonA)
 
-# cl0 = longitudinal.liftCoefZero()
-# aircraft.addCoefficients(cl0=cl0)
+cl0 = longitudinal.liftCoefZero()
 
 # alpha0 = longitudinal.alphaZero()
 # aircraft.addCoefficients(alpha0=alpha0)

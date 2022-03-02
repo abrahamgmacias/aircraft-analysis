@@ -13,10 +13,10 @@ wing = af.Wing(3.71, 0.494, 'MH-114')
 wing.addGeometry(arw=7.5, sw=1.831, cw=0.494, iw=round(1/57.3, 4))
 wing.addCoefficients(ew=0.825)
 
-propeller = af.Propeller(12, 12)   # placeholder data
+propeller = af.Propeller(12, 12)            # placeholder data
 motor = af.Motor(propeller)
 
-motor.addMotorSpecs(pa_max=32)   # placeholder pa_max
+motor.addMotorSpecs(pa_max=32)              # placeholder pa_max
 propeller.addPropellerSpecs(n_eff=0.95)
 
 atmosphere = af.Atmospheric(1.225)
