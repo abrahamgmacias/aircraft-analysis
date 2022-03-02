@@ -124,7 +124,6 @@ class Aircraft():
         return objectToReturn
 
 
-
 # Description can be removed if a tail class is created
 class Wing():
     def __init__(self, bw=None, cw=None, airfoil=None, description=None):
@@ -242,6 +241,31 @@ class Propeller():
         self.propellerSpecs.update(kwargs)
         return f"'{list(kwargs.keys())[-1]}' was added to propellerSpecs"
 
+    def getCoefficients(self, *args, dict=False):
+        object_to_return = []
+        if dict == True:
+                object_to_return = {}
+
+        if args == ():
+            if dict == False:
+                for element in self.propellerSpecs:
+                    object_to_return += [self.propellerSpecs[element]]
+                return object_to_return
+
+            else:
+                return self.propellerSpecs
+
+        else:
+            for arg in args:
+                if arg in self.propellerSpecs:
+                    if dict == False:
+                        object_to_return += [self.propellerSpecs[arg]]
+                    else:
+                        object_to_return[arg] = self.propellerSpecs[arg]
+                 
+            return object_to_return
+
+
 
 class Motor():
     def __init__(self, propeller, max_rpm=None, max_voltage=None, max_amperage=None, rpm_voltage=None):
@@ -342,6 +366,16 @@ class LongitudinalStaticStability():
         return round(epsilon_alpha, 4)
 
     def liftCoefZero(self):
+        aw, alpha_0w = self.acWing.getCoefficients('aw', 'alpha_0w')
+        iw, sw = self.acWing.getGeometry('iw')
+        at = self.acTail.getCoefficients('at')
+        st, it = self.acTail.getGeometry('st', 'it')
+        epsilon_0 = self.acMotor.propeller.
+        n_ef = 
+
+        CL_0 = aw*(iw - alpha_0w) + self.ac['aircraft_specs']['n_ef']*(st/sw)*at*(it - self.ac['general_coefficients']['epsilon_0'])
+        return round(CL_0, 4)
+
         CL_0 = self.ac['general_coefficients']['aw']*(self.ac['aircraft_specs']['iw'] - self.ac['aircraft_specs']['alpha_0w']) + self.ac['aircraft_specs']['n_ef']*(self.ac['aircraft_specs']['St']/self.ac['aircraft_specs']['Sw'])*self.ac['general_coefficients']['at']*(self.ac['aircraft_specs']['it'] - self.ac['general_coefficients']['epsilon_0'])
         return round(CL_0, 4)
 
