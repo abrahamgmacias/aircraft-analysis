@@ -22,8 +22,8 @@ epsilon0 = longitudinal.epsilonZero()
 epsilonA = longitudinal.epsilonAlpha()
 
 cl0 = longitudinal.liftCoefZero()
-# alpha0 = longitudinal.alphaZero()
-# cm0 = longitudinal.cmZero()
+alpha0 = longitudinal.alphaZero()
+cm0 = longitudinal.cmZero()
 
 # # Compute for Cm_alpha
 # cmA = longitudinal.cmAlpha() 
