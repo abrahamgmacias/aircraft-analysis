@@ -22,12 +22,8 @@ epsilon0 = longitudinal.epsilonZero()
 epsilonA = longitudinal.epsilonAlpha()
 
 cl0 = longitudinal.liftCoefZero()
-
 # alpha0 = longitudinal.alphaZero()
-# aircraft.addCoefficients(alpha0=alpha0)
-
-# cm0 = longitudinal.cmZero(alpha0)
-# aircraft.addCoefficients(cm0=cm0)
+# cm0 = longitudinal.cmZero()
 
 # # Compute for Cm_alpha
 # cmA = longitudinal.cmAlpha() 
@@ -35,3 +31,5 @@ cl0 = longitudinal.liftCoefZero()
 # # Compute Equilibrium Angle - deg
 # aE = longitudinal.alphaEquilibrium()*57.3
 # aircraft.addCoefficients(cmA=cmA, aE=aE)
+
+# 

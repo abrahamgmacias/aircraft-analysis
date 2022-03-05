@@ -392,16 +392,16 @@ class LongitudinalStaticStability():
         return round(alpha0, 4)
 
     # Cornell - Eq. 3.17
-    # def cmZero(self):
-    #     epsilon0, epsilonAlpha = self.ac.getCoefficients('epsilon0', 'epsilonAlpha')
-    #     nEff = self.acMotor.propeller.getCoefficients('nEff')[0]
-    #     vh, at = self.acTail.getCoefficients('vh', 'at')
-    #     cm0w = self.acWing.getCoefficients('cm0w')[0]
-    #     alpha0 = self.ac.getCoefficients('alpha0')[0]
-    #     it = self.acTail.getGeometry('it')[0]
+    def cmZero(self):
+        epsilon0, epsilonAlpha = self.ac.getCoefficients('epsilon0', 'epsilonAlpha')
+        nEff = self.acMotor.propeller.getCoefficients('nEff')[0]
+        vh, at = self.acTail.getCoefficients('vh', 'at')
+        cm0w = self.acWing.getCoefficients('cm0w')[0]
+        alpha0 = self.ac.getCoefficients('alpha0')[0]
+        it = self.acTail.getGeometry('it')[0]
 
-    #     cm_0 = cm0w - nEff*vh*at*(it - epsilon0 + (1-epsilonAlpha)*alpha0)
-    #     return round(cm_0, 4)
+        cm_0 = cm0w - nEff*vh*at*(it - epsilon0 + (1-epsilonAlpha)*alpha0)
+        return round(cm_0, 4)
 
     # E and R
     def alphaEquilibrium(self):
