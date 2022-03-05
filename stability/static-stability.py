@@ -17,7 +17,7 @@ longitudinal.setTail('h_stabilizer')
 longitudinal.setWing('wing')
 longitudinal.setMotor('motor')
 
-# # Compute for Cm_0 
+# Compute for Cm_0 
 epsilon0 = longitudinal.epsilonZero()
 epsilonA = longitudinal.epsilonAlpha()
 
@@ -25,11 +25,12 @@ cl0 = longitudinal.liftCoefZero()
 alpha0 = longitudinal.alphaZero()
 cm0 = longitudinal.cmZero()
 
-# # Compute for Cm_alpha
+# Compute for Cm_alpha
 cmAlpha = longitudinal.cmAlpha() 
 
-# # Compute Equilibrium Angle - deg
-# aE = longitudinal.alphaEquilibrium()*57.3
-# aircraft.addCoefficients(cmA=cmA, aE=aE)
+# Compute Equilibrium Angle - deg
+aE = longitudinal.alphaEquilibrium()*57.3
 
-# 
+
+
+# Missing plot chart

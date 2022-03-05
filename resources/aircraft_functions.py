@@ -407,13 +407,17 @@ class LongitudinalStaticStability():
         alpha0 = self.ac.getCoefficients('alpha0')[0]
         it = self.acTail.getGeometry('it')[0]
 
-        cm_0 = cm0w - nEff*vh*at*(it - epsilon0 + (1-epsilonAlpha)*alpha0)
-        return round(cm_0, 4)
+        cm0 = cm0w - nEff*vh*at*(it - epsilon0 + (1-epsilonAlpha)*alpha0)
+        self.ac.addCoefficients(cm0=cm0)
+        return round(cm0, 4)
 
     # E and R
     def alphaEquilibrium(self):
-        alpha_e = (-self.ac['general_coefficients']['Cm_0'] / self.ac['general_coefficients']['Cm_a']) - abs(self.ac['aircraft_specs']['alpha_0'])
-        return round(alpha_e, 4)
+        cm0, cmAlpha, alpha0 = self.ac.getCoefficients('cm0', 'cmAlpha', 'alpha0')
+
+        alphaEq = (-cm0 / cmAlpha) - abs(alpha0)
+        self.ac.addCoefficients(alphaEq=alphaEq)
+        return round(alphaEq, 4)
 
 
 
