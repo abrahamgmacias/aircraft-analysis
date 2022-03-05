@@ -2,6 +2,8 @@ from urllib import request
 import pandas as pd
 import math
 
+# Remove boilerplate code by using decorators?
+
 # General Aircraft Functions
 class Aerodynamics():
     # Aircraft Dynamic Pressure
@@ -355,7 +357,8 @@ class LongitudinalStaticStability():
 
     # Epsilon @ AoA = 0
     def epsilonZero(self): 
-        cl_0w = self.acWingCoefficients['cl_0w']
+        cl_0w = self.acWingCoefficients['cl0w']
+
         epsilon0 = 2*cl_0w / (self.acWingGeometry['arw']*math.pi) 
         self.ac.addCoefficients(epsilon0=epsilon0)
         return round(epsilon0, 4)
@@ -363,30 +366,42 @@ class LongitudinalStaticStability():
     # Epsilon In Function of AoA - dE/alpha - Downwash - 1/rad
     def epsilonAlpha(self):
         aw = self.acWingCoefficients['aw']
+
         epsilonAlpha = 2*aw / (self.acWingGeometry['arw']*math.pi)
         self.ac.addCoefficients(epsilonAlpha=epsilonAlpha)
         return round(epsilonAlpha, 4)
 
     def liftCoefZero(self):
-        aw, alpha_0w = self.acWing.getCoefficients('aw', 'alpha_0w')
-        iw, sw = self.acWing.getGeometry('iw', 'sw')
-        at = self.acTail.getCoefficients('at')[0]
-        st, it = self.acTail.getGeometry('st', 'it')
+        aw, alpha_0w = self.acWing.getCoefficients('aw', 'alpha0w')
+        nEff = self.acMotor.propeller.getCoefficients('nEff')[0]
         epsilon0 = self.ac.getCoefficients('epsilon0')[0]
-        n_eff = self.acMotor.propeller.getCoefficients('n_eff')[0]
+        iw, sw = self.acWing.getGeometry('iw', 'sw')
+        st, it = self.acTail.getGeometry('st', 'it')
+        at = self.acTail.getCoefficients('at')[0]
 
-        cl0 = aw*(iw - alpha_0w) + n_eff*(st/sw)*at*(it - epsilon0)
+        cl0 = aw*(iw - alpha_0w) + nEff*(st/sw)*at*(it - epsilon0)
         self.ac.addCoefficients(cl0=cl0)
         return round(cl0, 4)
 
     def alphaZero(self):
-        alpha_0 = -self.ac['general_coefficients']['CL_0'] / self.ac['general_coefficients']['aw']
-        return round(alpha_0, 4)
+        cl0 = self.ac.getCoefficients('cl0')[0]
+        aw = self.acWing.getCoefficients('aw')[0]
+        
+        alpha0 = -cl0 / aw
+        self.ac.addCoefficients(alpha0=alpha0)
+        return round(alpha0, 4)
 
     # Cornell - Eq. 3.17
-    def cmZero(self, alpha_0):
-        cm_0 = self.ac['general_coefficients']['Cm_0w'] - self.ac['aircraft_specs']['n_ef']*self.ac['aircraft_specs']['Vh']*self.ac['general_coefficients']['at']*(self.ac['aircraft_specs']['it'] - self.ac['general_coefficients']['epsilon_0'] + (1-self.ac['general_coefficients']['epsilon_a'])*alpha_0)
-        return round(cm_0, 4)
+    # def cmZero(self):
+    #     epsilon0, epsilonAlpha = self.ac.getCoefficients('epsilon0', 'epsilonAlpha')
+    #     nEff = self.acMotor.propeller.getCoefficients('nEff')[0]
+    #     vh, at = self.acTail.getCoefficients('vh', 'at')
+    #     cm0w = self.acWing.getCoefficients('cm0w')[0]
+    #     alpha0 = self.ac.getCoefficients('alpha0')[0]
+    #     it = self.acTail.getGeometry('it')[0]
+
+    #     cm_0 = cm0w - nEff*vh*at*(it - epsilon0 + (1-epsilonAlpha)*alpha0)
+    #     return round(cm_0, 4)
 
     # E and R
     def alphaEquilibrium(self):
