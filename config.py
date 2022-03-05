@@ -21,6 +21,7 @@ config_data = {
 
                             'static_analysis': {
                                                  'parameters': {},
+                                                 'plotting': False,
                                                  'print_results': False,
                                                  'print_steps': False
                             }
