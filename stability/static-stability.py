@@ -26,7 +26,7 @@ alpha0 = longitudinal.alphaZero()
 cm0 = longitudinal.cmZero()
 
 # # Compute for Cm_alpha
-# cmA = longitudinal.cmAlpha() 
+cmAlpha = longitudinal.cmAlpha() 
 
 # # Compute Equilibrium Angle - deg
 # aE = longitudinal.alphaEquilibrium()*57.3

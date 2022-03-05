@@ -351,9 +351,16 @@ class LongitudinalStaticStability():
     
     # Cornell
     def cmAlpha(self):
-        staticMargin = self.ac_coefficients['x_cg_cw'] - self.ac_coefficients['x_ac_cw']
-        cm_a  = staticMargin*self.ac_coefficients['aw'] - self.ac['aircraft_specs']['n_ef']*self.ac['aircraft_specs']['Vh']*self.ac['general_coefficients']['at']*(1-self.ac['general_coefficients']['epsilon_a'])
-        return cm_a
+        x_cg_cw, x_ac_cw = self.ac.getCoefficients('x_cg_cw', 'x_ac_cw')
+        epsilonAlpha = self.ac.getCoefficients('epsilonAlpha')[0]
+        nEff = self.acMotor.propeller.getCoefficients('nEff')[0]
+        vh, at = self.acTail.getCoefficients('vh', 'at')
+        aw = self.acWing.getCoefficients('aw')[0]
+
+        staticMargin = x_cg_cw - x_ac_cw
+        cmAlpha  = staticMargin*aw - nEff*vh*at*(1-epsilonAlpha)
+        self.ac.addCoefficients(cmAlpha=cmAlpha)
+        return round(cmAlpha, 4)
 
     # Epsilon @ AoA = 0
     def epsilonZero(self): 
@@ -365,7 +372,7 @@ class LongitudinalStaticStability():
 
     # Epsilon In Function of AoA - dE/alpha - Downwash - 1/rad
     def epsilonAlpha(self):
-        aw = self.acWingCoefficients['aw']
+        aw = self.acWing.getCoefficients('aw')[0]
 
         epsilonAlpha = 2*aw / (self.acWingGeometry['arw']*math.pi)
         self.ac.addCoefficients(epsilonAlpha=epsilonAlpha)
