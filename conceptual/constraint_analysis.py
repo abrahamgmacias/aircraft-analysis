@@ -13,6 +13,7 @@ parameters = constraints['parameters']
 
 # Create objects and populate it
 aerodynamics = parameters['aerodynamics']
+propulsion = parameters['propulsion']
 aircraft = parameters['aircraft']
 wing = parameters['wing']
 
@@ -29,10 +30,14 @@ conceptualWing.addGeometry(arw=wing['arw'],
 conceptualWing.addCoefficients(oswaldSpan=wing['oswaldSpan'],
                                kFactor=wing['kFactor'])
 
+conceptualPropeller = Propeller()
+conceptualPropeller.addPropellerSpecs(propellerEff=propulsion['propellerEff'])
+
+conceptualMotor = Motor(conceptualPropeller)
+conceptualMotor.addMotorSpecs(maxPower=propulsion['maxPower'],
+                              thrustToWeight=propulsion['thrustToWeight'])
 
 
-# conceptualMotor = Motor()
-# conceptualPropeller = Propeller()
 # conceptualAtmosphere = Atmospheric()
 
 # Parametros propuestos
