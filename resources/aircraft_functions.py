@@ -198,7 +198,12 @@ class Propeller():
     coefficient_location = {'thrust_coeffs': 'thrust_coefficient_', 'power_coeffs': 'power_coefficient_'}
 
     def __init__(self, diameter=None, pitch=None):
-        self.propellerSpecs = {'diameter': diameter, 'pitch': pitch, 'pitch_diameter': pitch/diameter}
+        self.propellerSpecs = {'diameter': diameter, 'pitch': pitch}
+
+    def getPitchDiameterRatio(self):
+        pitchDiameterRatio = self.propellerSpecs['pitch'] / self.propellerSpecs['diameter']
+        self.propellerSpecs['pitchDiameter'] = pitchDiameterRatio
+        return pitchDiameterRatio
         
     def getPropellerData(self, prefix):
         return pd.read_csv(f'{prefix}{self.propellerSpecs["pitch_diameter"]}.csv')

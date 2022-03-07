@@ -46,7 +46,7 @@ config_data = {
                                                                            'kFactor': None
                                                                  },
 
-                                                                 'motor': {
+                                                                 'propulsion': {
                                                                            'maxPower': None,
                                                                            'propellerEff': None,
                                                                            'thrustToWeight': None
