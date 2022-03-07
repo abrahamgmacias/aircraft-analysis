@@ -24,6 +24,56 @@ config_data = {
                                                  'plotting': False,
                                                  'print_results': False,
                                                  'print_steps': False
+                            },
+
+                            'constraint_analysis': {
+                                                 'parameters': {
+                                                                 'velocities': {
+                                                                                'vStall': None,
+                                                                                'vCruise': None,
+                                                                                'vVertical': None,
+                                                                 }, 
+
+                                                                 'atmospheric_conditions': {
+                                                                           'densitySeaLevel': None,
+                                                                           'densityDesiredLevel': None
+                                                                 }, 
+
+                                                                 'wing': {
+                                                                           'arw': None,
+                                                                           'lamda': None,
+                                                                           'oswaldSpan': None,
+                                                                           'kFactor': None
+                                                                 },
+
+                                                                 'motor': {
+                                                                           'maxPower': None,
+                                                                           'propellerEff': None,
+                                                                           'thrustToWeight': None
+                                                                 },
+
+                                                                 'aircraft': {
+                                                                           'mtow': None
+                                                                 },
+
+                                                                 'performance': {
+                                                                           'loadAtBanking': None,
+                                                                           'takeOffDistance': None,
+                                                                           'groundFrictionCoefficient': None,
+                                                                           'gravity': 9.807
+                                                                 }, 
+
+                                                                 'aerodynamics': {
+                                                                           'cdMin': None,
+                                                                           'clMax': None,
+                                                                           'clTakeOff': None,
+                                                                           'cdTakeOff': None,
+                                                                 }
+                                                 },
+
+                                                 'plotting': False,
+                                                 'print_results': False,
+                                                 'print_steps': False
                             }
             }
 }
