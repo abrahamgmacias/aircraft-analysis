@@ -1,6 +1,34 @@
 import math
+import sys, os
 import numpy as np
 import matplotlib.pyplot as plt
+sys.path.append(os.path.realpath('.'))
+from config import config_data
+from resources.aircraft_functions import Aerodynamics, Aircraft, Wing, Propeller, Motor, Atmospheric
+
+
+# Import section
+constraints = config_data['analyses']['constraint_analysis']
+parameters = constraints['parameters']
+
+# Create objects and populate it
+aerodynamics = parameters['aerodynamics']
+aircraft = parameters['aircraft']
+
+conceptualAircraft = Aircraft()
+conceptualAircraft.addWeights(mtow=aircraft['mtow'])
+conceptualAircraft.addCoefficients(cdMin=aerodynamics['cdMin'],
+                                   clMax=aerodynamics['clMax'],
+                                   clTakeOff=aerodynamics['clTakeOff'],
+                                   cdTakeOff=aerodynamics['cdTakeOff'])
+
+
+
+
+
+# conceptualMotor = Motor()
+# conceptualPropeller = Propeller()
+# conceptualAtmosphere = Atmospheric()
 
 # Parametros propuestos
 vs = 12 #Velocidad de stall, m/s
@@ -8,8 +36,8 @@ vc = 14 #Velocidad de crucero, m/s
 vv = 0.508 #Velocidad vertical en Vy
 
 # Aircraft
-mtow = 22 #Peso máximo, kg
-Cdmin = 0.035 #Coeficiente de drag mínimo, tabla 3.1 GUDMUNDSSON
+# mtow = 22 #Peso máximo, kg
+# Cdmin = 0.035 #Coeficiente de drag mínimo, tabla 3.1 GUDMUNDSSON
 
 # Wing
 AR = 7.5 #Relación de aspecto
@@ -29,10 +57,10 @@ rho_desired = 0.974 #densidad del aire en un lugar en específico, kg/m^3
 mu = 0.05 #Coeficiente de fricción, tabla 17.1 Raymer, Dry concrete/asphalt
 g = 9.807 #Gravedad, m/s^2
 
-# Aerodynamic conds
-CLmax = 1.2 #Coeficiente de lift máximo deseado
-CLto = 1.2 #Coeficiente de lift deseado en despegue
-CDto = 0.04 #Coeficiente de drag deseado en despegue
+# # Aerodynamic conds
+# CLmax = 1.2 #Coeficiente de lift máximo deseado
+# CLto = 1.2 #Coeficiente de lift deseado en despegue
+# CDto = 0.04 #Coeficiente de drag deseado en despegue
 to_d = 61 #Distancia de despegue, metros
 
 # Range data
