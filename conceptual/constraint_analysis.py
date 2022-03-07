@@ -14,6 +14,7 @@ parameters = constraints['parameters']
 # Create objects and populate it
 aerodynamics = parameters['aerodynamics']
 aircraft = parameters['aircraft']
+wing = parameters['wing']
 
 conceptualAircraft = Aircraft()
 conceptualAircraft.addWeights(mtow=aircraft['mtow'])
@@ -22,7 +23,11 @@ conceptualAircraft.addCoefficients(cdMin=aerodynamics['cdMin'],
                                    clTakeOff=aerodynamics['clTakeOff'],
                                    cdTakeOff=aerodynamics['cdTakeOff'])
 
-
+conceptualWing = Wing()
+conceptualWing.addGeometry(arw=wing['arw'],
+                           lamda=wing['lamda'])
+conceptualWing.addCoefficients(oswaldSpan=wing['oswaldSpan'],
+                               kFactor=wing['kFactor'])
 
 
 
@@ -49,7 +54,8 @@ k = 1/((math.pi)*AR*e)                                  # Make formula for this
 p = 900 #Potencia, Watts
 n = 2 #Factor de carga = 1/cos(angulo de banqueo)
 ep = 0.8 #Eficiencia prop
-tw_real = (ep*p)/(mtow*g*vc)
+
+# tw_real = (ep*p)/(mtow*g*vc)          UNCOMMENT 
 
 # Flight conditions
 rho_sea = 1.225 #densidad del aire a nivel del mar, kg/m^3
