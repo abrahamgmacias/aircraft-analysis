@@ -66,16 +66,24 @@ class Aircraft():
     def __init__(self):
         self.aeroCoefficients = {}
 
-        # Wing, empenage, landing gear, etc. 
+        # Wing, empenage, landing gear, etc...
         self.components = {}
 
-        # Empty weight, MTOW, etc.
+        # Empty weight, MTOW, etc...
         self.weights = {}
+
+        # Vs, Vc, Ve, etc...
+        self.velocities = {}
 
     # Coefficients must be arrays
     def addCoefficients(self, **kwargs):
         self.aeroCoefficients.update(kwargs)
         return f"'{list(kwargs.keys())[-1]}' was added to aeroCoefficients"
+    
+    # Coefficients must be arrays
+    def addVelocities(self, **kwargs):
+        self.velocities.update(kwargs)
+        return f"'{list(kwargs.keys())[-1]}' was added to velocities"
 
     # Components should be classes 
     def addComponents(self, **kwargs):
