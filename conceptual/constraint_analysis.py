@@ -12,21 +12,35 @@ constraints = config_data['analyses']['constraint_analysis']
 parameters = constraints['parameters']
 
 # Create objects and populate it
+atmospheric = parameters['atmospheric_conditions']
 aerodynamics = parameters['aerodynamics']
 propulsion = parameters['propulsion']
+velocities = parameters['velocities']
 aircraft = parameters['aircraft']
 wing = parameters['wing']
 
+conceptualAtmosphere = Atmospheric(atmospheric['densityDesiredLevel'])
+if atmospheric['units'] == 'metric':
+    conceptualAtmosphere.setSeaLevel()
+else:
+    conceptualAtmosphere.setSeaLevel(metric=False, imperial=True)
+
 conceptualAircraft = Aircraft()
 conceptualAircraft.addWeights(mtow=aircraft['mtow'])
+
 conceptualAircraft.addCoefficients(cdMin=aerodynamics['cdMin'],
                                    clMax=aerodynamics['clMax'],
                                    clTakeOff=aerodynamics['clTakeOff'],
                                    cdTakeOff=aerodynamics['cdTakeOff'])
 
+conceptualAircraft.addVelocities(vStall=velocities['vStall'])
+conceptualAircraft.addVelocities(vCruise=velocities['vCruise'])
+conceptualAircraft.addVelocities(vVertical=velocities['vVertical'])
+
 conceptualWing = Wing()
 conceptualWing.addGeometry(arw=wing['arw'],
                            lamda=wing['lamda'])
+                        
 conceptualWing.addCoefficients(oswaldSpan=wing['oswaldSpan'],
                                kFactor=wing['kFactor'])
 
