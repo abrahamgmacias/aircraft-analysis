@@ -329,15 +329,22 @@ class Motor():
 
 # Placeholder class to append methods to 
 class Atmospheric():
-    air_densities = [1.255]
-
     def __init__(self, curr_density, curr_temperature=None, curr_height=None):
-        self.air_conditions = {'curr_temperature': curr_temperature, 'curr_density': curr_density,
-                               'curr_height': curr_height}
+        self.airConditions = {'currTemperature': curr_temperature, 'currDensity': curr_density,
+                               'currHeight': curr_height}
 
     def atmosphericRatio(self):
-        return Atmospheric.air_densities[0] / self.air_conditions['curr_density']
+        return Atmospheric.air_densities[0] / self.airConditions['curr_density']
 
+    # Imperial logic missing
+    def setSeaLevel(self, metric=True, imperial=False):
+        if metric == True:
+            self.seaLevelConditions = {'seaTemperature': None, 'seaDensity': 1.255,
+                                       'seaHeight': 0}
+            return self.seaLevelConditions
+
+        if imperial == True:
+            pass
 
 
 class LongitudinalStaticStability():
