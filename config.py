@@ -35,7 +35,7 @@ config_data = {
                                                                  }, 
 
                                                                  'atmospheric_conditions': {
-                                                                           'densitySeaLevel': None,
+                                                                           'units': 'metric',
                                                                            'densityDesiredLevel': None
                                                                  }, 
 
