@@ -14,12 +14,15 @@ parameters = constraints['parameters']
 # Create objects and populate it
 atmospheric = parameters['atmospheric_conditions']
 aerodynamics = parameters['aerodynamics']
+performance = parameters['performance']
 propulsion = parameters['propulsion']
 velocities = parameters['velocities']
 aircraft = parameters['aircraft']
 wing = parameters['wing']
 
 conceptualAtmosphere = Atmospheric(atmospheric['densityDesiredLevel'])
+conceptualAtmosphere.setGravity(performance['gravity'])
+
 if atmospheric['units'] == 'metric':
     conceptualAtmosphere.setSeaLevel()
 else:
@@ -33,9 +36,13 @@ conceptualAircraft.addCoefficients(cdMin=aerodynamics['cdMin'],
                                    clTakeOff=aerodynamics['clTakeOff'],
                                    cdTakeOff=aerodynamics['cdTakeOff'])
 
-conceptualAircraft.addVelocities(vStall=velocities['vStall'])
-conceptualAircraft.addVelocities(vCruise=velocities['vCruise'])
-conceptualAircraft.addVelocities(vVertical=velocities['vVertical'])
+conceptualAircraft.addVelocities(vStall=velocities['vStall'],
+                                 vCruise=velocities['vCruise'],
+                                 vVertical=velocities['vVertical'])
+
+conceptualAircraft.setPerformanceData(loadAtBanking=performance['loadAtBanking'],
+                                      takeOffDistance=performance['takeOffDistance'],
+                                      groundFrictionCoefficient=performance['groundFrictionCoefficient'])
 
 conceptualWing = Wing()
 conceptualWing.addGeometry(arw=wing['arw'],
@@ -51,73 +58,17 @@ conceptualMotor = Motor(conceptualPropeller)
 conceptualMotor.addMotorSpecs(maxPower=propulsion['maxPower'],
                               thrustToWeight=propulsion['thrustToWeight'])
 
+# Add to aircraft
+conceptualAircraft.addComponents(wing=conceptualWing, motor=conceptualMotor)
 
-# conceptualAtmosphere = Atmospheric()
-
-# Parametros propuestos
-vs = 12 #Velocidad de stall, m/s
-vc = 14 #Velocidad de crucero, m/s
-vv = 0.508 #Velocidad vertical en Vy
-
-# Aircraft
-# mtow = 22 #Peso máximo, kg
-# Cdmin = 0.035 #Coeficiente de drag mínimo, tabla 3.1 GUDMUNDSSON
-
-# Wing
-AR = 7.5 #Relación de aspecto
-lam = 1 #Taper, rectangular
-e = 0.75 #Factor de eficiencia de Oswald                # Make formula for this 
-k = 1/((math.pi)*AR*e)                                  # Make formula for this 
-
-# Motor
-p = 900 #Potencia, Watts
-n = 2 #Factor de carga = 1/cos(angulo de banqueo)
-ep = 0.8 #Eficiencia prop
-
-# tw_real = (ep*p)/(mtow*g*vc)          UNCOMMENT 
-
-# Flight conditions
-rho_sea = 1.225 #densidad del aire a nivel del mar, kg/m^3
-rho_desired = 0.974 #densidad del aire en un lugar en específico, kg/m^3
-mu = 0.05 #Coeficiente de fricción, tabla 17.1 Raymer, Dry concrete/asphalt
-g = 9.807 #Gravedad, m/s^2
-
-# # Aerodynamic conds
-# CLmax = 1.2 #Coeficiente de lift máximo deseado
-# CLto = 1.2 #Coeficiente de lift deseado en despegue
-# CDto = 0.04 #Coeficiente de drag deseado en despegue
-to_d = 61 #Distancia de despegue, metros
-
-# Range data
-ws = np.linspace(30,170,171)
 
 # Exportar la clase a af
 # Sacar la plot section y dejarlo en el executable
 # Hacer un dict con cada uno de los elementos del init
 class Constraints():
-    def __init__(self,vs,vc,vv,mtow,Cdmin,AR,lam,p,n,rho_sea,rho_desired,mu,e,CLmax,CLto,CDto,to_d,k,ws,ep,tw_real):
-        self.vs = vs 
-        self.vc = vc 
-        self.vv = vv 
-        self.mtow = mtow 
-        self.Cdmin = Cdmin 
-        self.AR = AR 
-        self.lam = lam 
-        self.p = p 
-        self.n = n
-        self.rho_sea = rho_sea 
-        self.rho_desired = rho_desired 
-        self.mu = mu 
-        self.g = g 
-        self.e = e 
-        self.CLmax = CLmax 
-        self.CLto = CLto 
-        self.CDto = CDto 
-        self.to_d = to_d 
-        self.k = k
-        self.ws = ws
-        self.ep = np
-        self.tw_real = tw_real
+    def __init__(self, aircraft, atmosphericConditions):
+        self.aircraft = aircraft
+        self.atmosphericConditions = atmosphericConditions
 
     #Métodos para encontrar T/W
     def turn(self): #Constant velocity turn
@@ -182,3 +133,45 @@ def plot(self):
     ax2.legend(loc='upper center')
     fig.tight_layout()
     plt.show()
+
+
+
+
+# conceptualAtmosphere = Atmospheric()
+
+# Parametros propuestos
+# vs = 12 #Velocidad de stall, m/s
+# vc = 14 #Velocidad de crucero, m/s
+# vv = 0.508 #Velocidad vertical en Vy
+
+# Aircraft
+# mtow = 22 #Peso máximo, kg
+# Cdmin = 0.035 #Coeficiente de drag mínimo, tabla 3.1 GUDMUNDSSON
+
+# # Wing
+# AR = 7.5 #Relación de aspecto
+# lam = 1 #Taper, rectangular
+# e = 0.75 #Factor de eficiencia de Oswald                # Make formula for this 
+# k = 1/((math.pi)*AR*e)                                  # Make formula for this 
+
+# Motor
+# p = 900 #Potencia, Watts
+# n = 2 #Factor de carga = 1/cos(angulo de banqueo)
+# ep = 0.8 #Eficiencia prop
+
+# tw_real = (ep*p)/(mtow*g*vc)          UNCOMMENT 
+
+
+# Flight conditions
+# rho_sea = 1.225 #densidad del aire a nivel del mar, kg/m^3
+# rho_desired = 0.974 #densidad del aire en un lugar en específico, kg/m^3
+# mu = 0.05 #Coeficiente de fricción, tabla 17.1 Raymer, Dry concrete/asphalt
+# g = 9.807 #Gravedad, m/s^2
+
+# # Aerodynamic conds
+# CLmax = 1.2 #Coeficiente de lift máximo deseado
+# CLto = 1.2 #Coeficiente de lift deseado en despegue
+# CDto = 0.04 #Coeficiente de drag deseado en despegue
+
+
+# Range data

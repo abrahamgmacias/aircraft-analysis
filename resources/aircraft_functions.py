@@ -65,15 +65,10 @@ class Aerodynamics():
 class Aircraft():
     def __init__(self):
         self.aeroCoefficients = {}
-
-        # Wing, empenage, landing gear, etc...
+        self.performanceData = {}
         self.components = {}
-
-        # Empty weight, MTOW, etc...
-        self.weights = {}
-
-        # Vs, Vc, Ve, etc...
         self.velocities = {}
+        self.weights = {}
 
     # Coefficients must be arrays
     def addCoefficients(self, **kwargs):
@@ -132,6 +127,10 @@ class Aircraft():
                     objectToReturn[arg] = element
 
         return objectToReturn
+
+    def setPerformanceData(self, **kwargs):
+        self.components.update(kwargs)
+        return f"'{list(kwargs.keys())[-1]}' was added to performace" 
 
 
 # Description can be removed if a tail class is created
@@ -327,7 +326,6 @@ class Motor():
         return self.propeller    
 
 
-# Placeholder class to append methods to 
 class Atmospheric():
     def __init__(self, curr_density, curr_temperature=None, curr_height=None):
         self.airConditions = {'currTemperature': curr_temperature, 'currDensity': curr_density,
@@ -345,6 +343,10 @@ class Atmospheric():
 
         if imperial == True:
             pass
+
+    def setGravity(self, gravity):
+        self.airConditions['gravity'] = gravity
+        return 'Gravity set successfully.'
 
 
 class LongitudinalStaticStability():
