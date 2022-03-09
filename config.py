@@ -1,6 +1,6 @@
 from re import M
 from main import *
-
+import numpy as np
 
 # Executor soon-to-be JSON portion
 trim_analysis = True
@@ -68,7 +68,9 @@ config_data = {
                                                                            'clMax': None,
                                                                            'clTakeOff': None,
                                                                            'cdTakeOff': None,
-                                                                 }
+                                                                 },
+
+                                                                 'ws_range': np.linspace(30, 170, 171),
                                                  },
 
                                                  'plotting': False,

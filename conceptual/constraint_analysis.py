@@ -21,6 +21,8 @@ aircraft = parameters['aircraft']
 wing = parameters['wing']
 
 conceptualAtmosphere = Atmospheric(atmospheric['densityDesiredLevel'])
+conceptualAtmosphere.setGravity(performance['gravity'])
+
 if atmospheric['units'] == 'metric':
     conceptualAtmosphere.setSeaLevel()
 else:
@@ -52,39 +54,22 @@ conceptualMotor = Motor(conceptualPropeller)
 conceptualMotor.addMotorSpecs(maxPower=propulsion['maxPower'],
                               thrustToWeight=propulsion['thrustToWeight'])
 
+# Add to aircraft
+conceptualAircraft.addComponents(wing=conceptualWing, motor=conceptualMotor, )
+
 # Factor de carga
 groundFrictionCoefficient = performance['groundFrictionCoefficient']
-gravity = performance['gravity']
 takeOffDistance = performance['takeOffDistance']
 loadAtBanking = performance['loadAtBanking']
+
 
 # Exportar la clase a af
 # Sacar la plot section y dejarlo en el executable
 # Hacer un dict con cada uno de los elementos del init
 class Constraints():
-    def __init__(self,vs,vc,vv,mtow,Cdmin,AR,lam,p,n,rho_sea,rho_desired,mu,e,CLmax,CLto,CDto,to_d,k,ws,ep,tw_real):
-        self.vs = vs 
-        self.vc = vc 
-        self.vv = vv 
-        self.mtow = mtow 
-        self.Cdmin = Cdmin 
-        self.AR = AR 
-        self.lam = lam 
-        self.p = p 
-        self.n = n
-        self.rho_sea = rho_sea 
-        self.rho_desired = rho_desired 
-        self.mu = mu 
-        self.g = g 
-        self.e = e 
-        self.CLmax = CLmax 
-        self.CLto = CLto 
-        self.CDto = CDto 
-        self.to_d = to_d 
-        self.k = k
-        self.ws = ws
-        self.ep = np
-        self.tw_real = tw_real
+    def __init__(self, aircraft, atmosphericConditions):
+        self.aircraft = aircraft
+        self.atmosphericConditions = atmosphericConditions
 
     #Métodos para encontrar T/W
     def turn(self): #Constant velocity turn

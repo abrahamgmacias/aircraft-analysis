@@ -346,6 +346,9 @@ class Atmospheric():
         if imperial == True:
             pass
 
+    def setGravity(self, gravity):
+        self.airConditions['gravity'] = gravity
+        return 'Gravity set successfully.'
 
 class LongitudinalStaticStability():
     def __init__(self, aircraft):
