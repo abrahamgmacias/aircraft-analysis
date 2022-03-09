@@ -14,6 +14,7 @@ parameters = constraints['parameters']
 # Create objects and populate it
 atmospheric = parameters['atmospheric_conditions']
 aerodynamics = parameters['aerodynamics']
+performance = parameters['performance']
 propulsion = parameters['propulsion']
 velocities = parameters['velocities']
 aircraft = parameters['aircraft']
@@ -51,45 +52,11 @@ conceptualMotor = Motor(conceptualPropeller)
 conceptualMotor.addMotorSpecs(maxPower=propulsion['maxPower'],
                               thrustToWeight=propulsion['thrustToWeight'])
 
-
-# conceptualAtmosphere = Atmospheric()
-
-# Parametros propuestos
-vs = 12 #Velocidad de stall, m/s
-vc = 14 #Velocidad de crucero, m/s
-vv = 0.508 #Velocidad vertical en Vy
-
-# Aircraft
-# mtow = 22 #Peso máximo, kg
-# Cdmin = 0.035 #Coeficiente de drag mínimo, tabla 3.1 GUDMUNDSSON
-
-# Wing
-AR = 7.5 #Relación de aspecto
-lam = 1 #Taper, rectangular
-e = 0.75 #Factor de eficiencia de Oswald                # Make formula for this 
-k = 1/((math.pi)*AR*e)                                  # Make formula for this 
-
-# Motor
-p = 900 #Potencia, Watts
-n = 2 #Factor de carga = 1/cos(angulo de banqueo)
-ep = 0.8 #Eficiencia prop
-
-# tw_real = (ep*p)/(mtow*g*vc)          UNCOMMENT 
-
-# Flight conditions
-rho_sea = 1.225 #densidad del aire a nivel del mar, kg/m^3
-rho_desired = 0.974 #densidad del aire en un lugar en específico, kg/m^3
-mu = 0.05 #Coeficiente de fricción, tabla 17.1 Raymer, Dry concrete/asphalt
-g = 9.807 #Gravedad, m/s^2
-
-# # Aerodynamic conds
-# CLmax = 1.2 #Coeficiente de lift máximo deseado
-# CLto = 1.2 #Coeficiente de lift deseado en despegue
-# CDto = 0.04 #Coeficiente de drag deseado en despegue
-to_d = 61 #Distancia de despegue, metros
-
-# Range data
-ws = np.linspace(30,170,171)
+# Factor de carga
+groundFrictionCoefficient = performance['groundFrictionCoefficient']
+gravity = performance['gravity']
+takeOffDistance = performance['takeOffDistance']
+loadAtBanking = performance['loadAtBanking']
 
 # Exportar la clase a af
 # Sacar la plot section y dejarlo en el executable
@@ -182,3 +149,45 @@ def plot(self):
     ax2.legend(loc='upper center')
     fig.tight_layout()
     plt.show()
+
+
+
+
+# conceptualAtmosphere = Atmospheric()
+
+# Parametros propuestos
+# vs = 12 #Velocidad de stall, m/s
+# vc = 14 #Velocidad de crucero, m/s
+# vv = 0.508 #Velocidad vertical en Vy
+
+# Aircraft
+# mtow = 22 #Peso máximo, kg
+# Cdmin = 0.035 #Coeficiente de drag mínimo, tabla 3.1 GUDMUNDSSON
+
+# # Wing
+# AR = 7.5 #Relación de aspecto
+# lam = 1 #Taper, rectangular
+# e = 0.75 #Factor de eficiencia de Oswald                # Make formula for this 
+# k = 1/((math.pi)*AR*e)                                  # Make formula for this 
+
+# Motor
+# p = 900 #Potencia, Watts
+# n = 2 #Factor de carga = 1/cos(angulo de banqueo)
+# ep = 0.8 #Eficiencia prop
+
+# tw_real = (ep*p)/(mtow*g*vc)          UNCOMMENT 
+
+
+# Flight conditions
+# rho_sea = 1.225 #densidad del aire a nivel del mar, kg/m^3
+# rho_desired = 0.974 #densidad del aire en un lugar en específico, kg/m^3
+# mu = 0.05 #Coeficiente de fricción, tabla 17.1 Raymer, Dry concrete/asphalt
+# g = 9.807 #Gravedad, m/s^2
+
+# # Aerodynamic conds
+# CLmax = 1.2 #Coeficiente de lift máximo deseado
+# CLto = 1.2 #Coeficiente de lift deseado en despegue
+# CDto = 0.04 #Coeficiente de drag deseado en despegue
+
+
+# Range data
