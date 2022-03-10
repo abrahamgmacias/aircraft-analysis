@@ -20,21 +20,29 @@ velocities = parameters['velocities']
 aircraft = parameters['aircraft']
 wing = parameters['wing']
 
+densitySeaLevel = atmospheric['densitySeaLevel']
+
+arw = wing['arw']
+kFactor = wing['kFactor']
+oswaldSpan = wing['oswaldSpan']
+
+loadFactor = performance['loadAtBanking']
+vVertical = performance['vVertical']
+vCruise = performance['vCruise']
+
+cdMin = aerodynamics['cdMin']
+clMax = aerodynamics['clMax']
+clTakeOff = aerodynamics['clTakeOff']
+cdTakeOff = aerodynamics['cdTakeOff']
 
 # Execution section
 results = {'turn': [], 'rateOfClimb': [], 'takeOff': [], 'cruise': []}
 
 for ws in parameters['ws_range']:
-    # Turn 
-    turn = con.turn()
-
-    # Rate of Climb
-    rateOfClimb = con.rateOfClimb()
-
-    # Take Off
+    # Computing section
+    turn = con.turn(ws, densitySeaLevel, vCruise, cdMin, loadFactor, kFactor)
+    rateOfClimb = con.rateOfClimb(ws, densitySeaLevel, vVertical, cdMin, kFactor)
     takeOff = con.takeoff()
-
-    # Cruise
     cruise = con.cruise()
 
     # Appending section

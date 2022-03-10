@@ -1,5 +1,6 @@
 from urllib import request
 import pandas as pd
+import numpy as np
 import math
 
 # Remove boilerplate code by using decorators?
@@ -466,68 +467,66 @@ class LongitudinalStaticStability():
 
 
 class Constraints():
-
-    #Métodos para encontrar T/W
+    # Métodos para encontrar T/W
     @staticmethod
-    def turn():  #Constant velocity turn
-
+    def turn(ws, densitySeaLevel, vCruise, cdMin, loadFactor, kFactor):  #Constant velocity turn
         q_turn = 0.5*(densitySeaLevel)*(vCruise**2)
-        firstTerm = (cdMin)/(self.wsRange)
+        firstTerm = (cdMin)/(ws)
         secondTerm = (loadFactor)/(q_turn)
-        return q_turn*(firstTerm + kFactor*(secondTerm**2)*self.wsRange)
+        return q_turn*(firstTerm + kFactor*(secondTerm**2)*ws)
     
     @staticmethod
-    def roc(): #Rate of Climb
-        vy = ((2/self.rho_sea)*self.ws*np.sqrt(self.k/(3*self.Cdmin)))**0.5
-        q_climb = 0.5*self.rho_sea*(vy**2)
-        return (self.vv/vy + (q_climb/self.ws)*self.Cdmin) + (self.k/q_climb)*self.ws
+    def rateOfClimb(ws, densitySeaLevel, vVertical, cdMin, kFactor): #Rate of Climb
+        rateOfClimbSpeed = np.sqrt((2/densitySeaLevel)*ws*np.sqrt(kFactor/(3*cdMin)))
+        qClimb = 0.5*densitySeaLevel*(rateOfClimbSpeed**2)
+        return (vVertical/rateOfClimbSpeed + (qClimb/ws)*cdMin) + (kFactor/qClimb)*ws
 
     @staticmethod
-    def takeoff(): #Desired Takeoff Distance
-        vto = 1.2*np.sqrt(self.ws*(2/(self.rho_sea*self.CLmax)))
-        q_takeoff = 0.5*self.rho_sea*(vto**2)
-        return (vto**2)/(2*self.g*self.to_d) + (q_takeoff*self.CDto)/self.ws + self.mu*(1-(q_takeoff*self.CLto)/self.ws)
+    def takeoff(ws, densitySeaLevel): #Desired Takeoff Distance
+        vto = 1.2*np.sqrt(ws*(2/(densitySeaLevel*self.CLmax)))
+        q_takeoff = 0.5*densitySeaLevel*(vto**2)
+        return (vto**2)/(2*self.g*self.to_d) + (q_takeoff*self.CDto)/ws + self.mu*(1-(q_takeoff*self.CLto)/ws)
 
     @staticmethod
-    def cruise(): #Desired cruise Airspeed
-        q_cruise = 0.5*self.rho_sea*(vc**2)
-        return q_cruise*self.Cdmin*(1/self.ws) + self.k*(1/q_cruise)*self.ws
+    def cruise(ws, densitySeaLevel): #Desired cruise Airspeed
+        q_cruise = 0.5*densitySeaLevel*(vc**2)
+        return q_cruise*cdMin*(1/ws) + kFactor*(1/q_cruise)*ws
     
     def CLmax1(self):
-        q_stall1 = 0.5*self.rho_sea*(self.vs**2)
-        return (1/q_stall1)*self.ws
+        q_stall1 = 0.5*densitySeaLevel*(self.vs**2)
+        return (1/q_stall1)*ws
 
     def CLmax2(self):
-        q_stall2 = 0.5*self.rho_sea*((self.vs-2)**2)
-        return (1/q_stall2)*self.ws
+        q_stall2 = 0.5*densitySeaLevel*((self.vs-2)**2)
+        return (1/q_stall2)*ws
 
     def CLmax3(self):
-        q_stall3 = 0.5*self.rho_sea*((self.vs+2)**2)
-        return (1/q_stall3)*self.ws
+        q_stall3 = 0.5*densitySeaLevel*((self.vs+2)**2)
+        return (1/q_stall3)*ws
 
     def CLmax4(self):
-        q_stall4 = 0.5*self.rho_sea*((self.vs+4)**2)
-        return (1/q_stall4)*self.ws
+        q_stall4 = 0.5*densitySeaLevel*((self.vs+4)**2)
+        return (1/q_stall4)*ws
 
     def CLmax5(self):
-        q_stall5 = 0.5*self.rho_sea*((self.vs-4)**2)
-        return (1/q_stall5)*self.ws
+        q_stall5 = 0.5*densitySeaLevel*((self.vs-4)**2)
+        return (1/q_stall5)*ws
         
     def plot(self):
         fig, ax1 = plt.subplots()
-        ax1.plot(self.ws, self.turn(), color = 'black',label='Constant velocity turn')
-        ax1.plot(self.ws, self.roc(), color = 'red',label='Rate of Climb')
-        ax1.plot(self.ws, self.takeoff(), color = 'blue',label='Desired Takeoff Distance')
-        ax1.plot(self.ws, self.cruise(), color = 'yellow',label='Desired cruise Airspeed')
+        ax1.plot(ws, self.turn(), color = 'black',label='Constant velocity turn')
+        ax1.plot(ws, self.roc(), color = 'red',label='Rate of Climb')
+        ax1.plot(ws, self.takeoff(), color = 'blue',label='Desired Takeoff Distance')
+        ax1.plot(ws, self.cruise(), color = 'yellow',label='Desired cruise Airspeed')
         ax1.hlines(self.tw_real, 30, 170, colors='k', linestyles='dashed',label='T/W Real posible con Vcrucero')
 
         ax2 = ax1.twinx()
         ax2.set_ylabel('CLmax',fontsize=25)
-        ax2.plot(self.ws, self.CLmax1(), color = 'k', linestyle='-.',label='Recta Vstall = 12 m/s')
-        ax2.plot(self.ws, self.CLmax2(), color = 'b', linestyle='-.',label='Recta Vstall = 10 m/s')
-        ax2.plot(self.ws, self.CLmax3(), color = 'r', linestyle='-.',label='Recta Vstall = 14 m/s')
-        ax2.plot(self.ws, self.CLmax4(), color = 'magenta', linestyle='-.',label='Recta Vstall = 16 m/s')
-        #ax2.plot(self.ws, self.CLmax5(), color = 'green', linestyle='-.',label='Recta Vstall = 8 m/s')
+        ax2.plot(ws, self.CLmax1(), color = 'k', linestyle='-.',label='Recta Vstall = 12 m/s')
+        ax2.plot(ws, self.CLmax2(), color = 'b', linestyle='-.',label='Recta Vstall = 10 m/s')
+        ax2.plot(ws, self.CLmax3(), color = 'r', linestyle='-.',label='Recta Vstall = 14 m/s')
+        ax2.plot(ws, self.CLmax4(), color = 'magenta', linestyle='-.',label='Recta Vstall = 16 m/s')
+        #ax2.plot(ws, self.CLmax5(), color = 'green', linestyle='-.',label='Recta Vstall = 8 m/s')
         plt.title('Constraint Diagram', fontsize = 25,fontweight='bold')
 
         ax1.set_ylabel('T/W', fontsize = 25)
