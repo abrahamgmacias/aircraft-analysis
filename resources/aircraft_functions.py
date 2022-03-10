@@ -280,7 +280,6 @@ class Propeller():
             return object_to_return
 
 
-
 class Motor():
     def __init__(self, propeller, max_rpm=None, max_voltage=None, max_amperage=None, rpm_voltage=None):
         self.propeller = propeller
@@ -329,7 +328,7 @@ class Motor():
 class Atmospheric():
     def __init__(self, curr_density, curr_temperature=None, curr_height=None):
         self.airConditions = {'currTemperature': curr_temperature, 'currDensity': curr_density,
-                               'currHeight': curr_height}
+                              'currHeight': curr_height}
 
     def atmosphericRatio(self):
         return Atmospheric.air_densities[0] / self.airConditions['curr_density']
@@ -347,6 +346,30 @@ class Atmospheric():
     def setGravity(self, gravity):
         self.airConditions['gravity'] = gravity
         return 'Gravity set successfully.'
+
+    def getCurrentAirConditions(self, *args, dict=False):
+        object_to_return = []
+        if dict == True:
+                object_to_return = {}
+
+        if args == ():
+            if dict == False:
+                for element in self.airConditions:
+                    object_to_return += [self.airConditions[element]]
+                return object_to_return
+
+            else:
+                return self.airConditions
+
+        else:
+            for arg in args:
+                if arg in self.airConditions:
+                    if dict == False:
+                        object_to_return += [self.airConditions[arg]]
+                    else:
+                        object_to_return[arg] = self.airConditions[arg]
+                 
+            return object_to_return
 
 
 class LongitudinalStaticStability():
@@ -442,6 +465,77 @@ class LongitudinalStaticStability():
         return round(alphaEq, 4)
 
 
+class Constraints():
+
+    #Métodos para encontrar T/W
+    @staticmethod
+    def turn():  #Constant velocity turn
+
+        q_turn = 0.5*(densitySeaLevel)*(vCruise**2)
+        firstTerm = (cdMin)/(self.wsRange)
+        secondTerm = (loadFactor)/(q_turn)
+        return q_turn*(firstTerm + kFactor*(secondTerm**2)*self.wsRange)
+    
+    @staticmethod
+    def roc(): #Rate of Climb
+        vy = ((2/self.rho_sea)*self.ws*np.sqrt(self.k/(3*self.Cdmin)))**0.5
+        q_climb = 0.5*self.rho_sea*(vy**2)
+        return (self.vv/vy + (q_climb/self.ws)*self.Cdmin) + (self.k/q_climb)*self.ws
+
+    @staticmethod
+    def takeoff(): #Desired Takeoff Distance
+        vto = 1.2*np.sqrt(self.ws*(2/(self.rho_sea*self.CLmax)))
+        q_takeoff = 0.5*self.rho_sea*(vto**2)
+        return (vto**2)/(2*self.g*self.to_d) + (q_takeoff*self.CDto)/self.ws + self.mu*(1-(q_takeoff*self.CLto)/self.ws)
+
+    @staticmethod
+    def cruise(): #Desired cruise Airspeed
+        q_cruise = 0.5*self.rho_sea*(vc**2)
+        return q_cruise*self.Cdmin*(1/self.ws) + self.k*(1/q_cruise)*self.ws
+    
+    def CLmax1(self):
+        q_stall1 = 0.5*self.rho_sea*(self.vs**2)
+        return (1/q_stall1)*self.ws
+
+    def CLmax2(self):
+        q_stall2 = 0.5*self.rho_sea*((self.vs-2)**2)
+        return (1/q_stall2)*self.ws
+
+    def CLmax3(self):
+        q_stall3 = 0.5*self.rho_sea*((self.vs+2)**2)
+        return (1/q_stall3)*self.ws
+
+    def CLmax4(self):
+        q_stall4 = 0.5*self.rho_sea*((self.vs+4)**2)
+        return (1/q_stall4)*self.ws
+
+    def CLmax5(self):
+        q_stall5 = 0.5*self.rho_sea*((self.vs-4)**2)
+        return (1/q_stall5)*self.ws
+        
+    def plot(self):
+        fig, ax1 = plt.subplots()
+        ax1.plot(self.ws, self.turn(), color = 'black',label='Constant velocity turn')
+        ax1.plot(self.ws, self.roc(), color = 'red',label='Rate of Climb')
+        ax1.plot(self.ws, self.takeoff(), color = 'blue',label='Desired Takeoff Distance')
+        ax1.plot(self.ws, self.cruise(), color = 'yellow',label='Desired cruise Airspeed')
+        ax1.hlines(self.tw_real, 30, 170, colors='k', linestyles='dashed',label='T/W Real posible con Vcrucero')
+
+        ax2 = ax1.twinx()
+        ax2.set_ylabel('CLmax',fontsize=25)
+        ax2.plot(self.ws, self.CLmax1(), color = 'k', linestyle='-.',label='Recta Vstall = 12 m/s')
+        ax2.plot(self.ws, self.CLmax2(), color = 'b', linestyle='-.',label='Recta Vstall = 10 m/s')
+        ax2.plot(self.ws, self.CLmax3(), color = 'r', linestyle='-.',label='Recta Vstall = 14 m/s')
+        ax2.plot(self.ws, self.CLmax4(), color = 'magenta', linestyle='-.',label='Recta Vstall = 16 m/s')
+        #ax2.plot(self.ws, self.CLmax5(), color = 'green', linestyle='-.',label='Recta Vstall = 8 m/s')
+        plt.title('Constraint Diagram', fontsize = 25,fontweight='bold')
+
+        ax1.set_ylabel('T/W', fontsize = 25)
+        ax1.set_xlabel(' W/S (N/m^2)', fontsize = 25)
+        ax1.legend()
+        ax2.legend(loc='upper center')
+        fig.tight_layout()
+        plt.show()
 
 
 

@@ -4,14 +4,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 sys.path.append(os.path.realpath('.'))
 from config import config_data
-from resources.aircraft_functions import Aerodynamics, Aircraft, Wing, Propeller, Motor, Atmospheric
+from resources.aircraft_functions import Constraints as con
 
 
 # Import section
 constraints = config_data['analyses']['constraint_analysis']
 parameters = constraints['parameters']
 
-# Create objects and populate it
+# Import parameters
 atmospheric = parameters['atmospheric_conditions']
 aerodynamics = parameters['aerodynamics']
 performance = parameters['performance']
@@ -20,121 +20,33 @@ velocities = parameters['velocities']
 aircraft = parameters['aircraft']
 wing = parameters['wing']
 
-conceptualAtmosphere = Atmospheric(atmospheric['densityDesiredLevel'])
-conceptualAtmosphere.setGravity(performance['gravity'])
 
-if atmospheric['units'] == 'metric':
-    conceptualAtmosphere.setSeaLevel()
-else:
-    conceptualAtmosphere.setSeaLevel(metric=False, imperial=True)
+# Execution section
+results = {'turn': [], 'rateOfClimb': [], 'takeOff': [], 'cruise': []}
 
-conceptualAircraft = Aircraft()
-conceptualAircraft.addWeights(mtow=aircraft['mtow'])
+for ws in parameters['ws_range']:
+    # Turn 
+    turn = con.turn()
 
-conceptualAircraft.addCoefficients(cdMin=aerodynamics['cdMin'],
-                                   clMax=aerodynamics['clMax'],
-                                   clTakeOff=aerodynamics['clTakeOff'],
-                                   cdTakeOff=aerodynamics['cdTakeOff'])
+    # Rate of Climb
+    rateOfClimb = con.rateOfClimb()
 
-conceptualAircraft.addVelocities(vStall=velocities['vStall'],
-                                 vCruise=velocities['vCruise'],
-                                 vVertical=velocities['vVertical'])
+    # Take Off
+    takeOff = con.takeoff()
 
-conceptualAircraft.setPerformanceData(loadAtBanking=performance['loadAtBanking'],
-                                      takeOffDistance=performance['takeOffDistance'],
-                                      groundFrictionCoefficient=performance['groundFrictionCoefficient'])
+    # Cruise
+    cruise = con.cruise()
 
-conceptualWing = Wing()
-conceptualWing.addGeometry(arw=wing['arw'],
-                           lamda=wing['lamda'])
-                        
-conceptualWing.addCoefficients(oswaldSpan=wing['oswaldSpan'],
-                               kFactor=wing['kFactor'])
-
-conceptualPropeller = Propeller()
-conceptualPropeller.addPropellerSpecs(propellerEff=propulsion['propellerEff'])
-
-conceptualMotor = Motor(conceptualPropeller)
-conceptualMotor.addMotorSpecs(maxPower=propulsion['maxPower'],
-                              thrustToWeight=propulsion['thrustToWeight'])
-
-# Add to aircraft
-conceptualAircraft.addComponents(wing=conceptualWing, motor=conceptualMotor)
+    # Appending section
+    results['rateOfClimb'] += [rateOfClimb]
+    results['takeOff'] += [takeOff]
+    results['cruise'] += [cruise]
+    results['turn'] += [turn]
 
 
 # Exportar la clase a af
 # Sacar la plot section y dejarlo en el executable
 # Hacer un dict con cada uno de los elementos del init
-class Constraints():
-    def __init__(self, aircraft, atmosphericConditions):
-        self.aircraft = aircraft
-        self.atmosphericConditions = atmosphericConditions
-
-    #Métodos para encontrar T/W
-    def turn(self): #Constant velocity turn
-        q_turn = 0.5*(self.rho_sea)*(self.vc**2)
-        a = (self.Cdmin)/(self.ws)
-        b = (self.n)/(q_turn)
-        return q_turn*(a + (self.k)*(b**2)*(self.ws))
-    
-    def roc(self): #Rate of Climb
-        vy = ((2/self.rho_sea)*self.ws*np.sqrt(self.k/(3*self.Cdmin)))**0.5
-        q_climb = 0.5*self.rho_sea*(vy**2)
-        return (self.vv/vy + (q_climb/self.ws)*self.Cdmin) + (self.k/q_climb)*self.ws
-
-    def takeoff(self): #Desired Takeoff Distance
-        vto = 1.2*np.sqrt(self.ws*(2/(self.rho_sea*self.CLmax)))
-        q_takeoff = 0.5*self.rho_sea*(vto**2)
-        return (vto**2)/(2*self.g*self.to_d) + (q_takeoff*self.CDto)/self.ws + self.mu*(1-(q_takeoff*self.CLto)/self.ws)
-
-    def cruise(self): #Desired cruise Airspeed
-        q_cruise = 0.5*self.rho_sea*(vc**2)
-        return q_cruise*self.Cdmin*(1/self.ws) + self.k*(1/q_cruise)*self.ws
-    
-    def CLmax1(self):
-        q_stall1 = 0.5*self.rho_sea*(self.vs**2)
-        return (1/q_stall1)*self.ws
-
-    def CLmax2(self):
-        q_stall2 = 0.5*self.rho_sea*((self.vs-2)**2)
-        return (1/q_stall2)*self.ws
-
-    def CLmax3(self):
-        q_stall3 = 0.5*self.rho_sea*((self.vs+2)**2)
-        return (1/q_stall3)*self.ws
-
-    def CLmax4(self):
-        q_stall4 = 0.5*self.rho_sea*((self.vs+4)**2)
-        return (1/q_stall4)*self.ws
-
-    def CLmax5(self):
-        q_stall5 = 0.5*self.rho_sea*((self.vs-4)**2)
-        return (1/q_stall5)*self.ws
-
-
-def plot(self):
-    fig, ax1 = plt.subplots()
-    ax1.plot(self.ws, self.turn(), color = 'black',label='Constant velocity turn')
-    ax1.plot(self.ws, self.roc(), color = 'red',label='Rate of Climb')
-    ax1.plot(self.ws, self.takeoff(), color = 'blue',label='Desired Takeoff Distance')
-    ax1.plot(self.ws, self.cruise(), color = 'yellow',label='Desired cruise Airspeed')
-    ax1.hlines(self.tw_real, 30, 170, colors='k', linestyles='dashed',label='T/W Real posible con Vcrucero')
-    ax2 = ax1.twinx()
-    ax2.set_ylabel('CLmax',fontsize=25)
-    ax2.plot(self.ws, self.CLmax1(), color = 'k', linestyle='-.',label='Recta Vstall = 12 m/s')
-    ax2.plot(self.ws, self.CLmax2(), color = 'b', linestyle='-.',label='Recta Vstall = 10 m/s')
-    ax2.plot(self.ws, self.CLmax3(), color = 'r', linestyle='-.',label='Recta Vstall = 14 m/s')
-    ax2.plot(self.ws, self.CLmax4(), color = 'magenta', linestyle='-.',label='Recta Vstall = 16 m/s')
-    #ax2.plot(self.ws, self.CLmax5(), color = 'green', linestyle='-.',label='Recta Vstall = 8 m/s')
-    plt.title('Constraint Diagram', fontsize = 25,fontweight='bold')
-    ax1.set_ylabel('T/W', fontsize = 25)
-    ax1.set_xlabel(' W/S (N/m^2)', fontsize = 25)
-    ax1.legend()
-    ax2.legend(loc='upper center')
-    fig.tight_layout()
-    plt.show()
-
-
 
 
 # conceptualAtmosphere = Atmospheric()
@@ -174,4 +86,52 @@ def plot(self):
 # CDto = 0.04 #Coeficiente de drag deseado en despegue
 
 
-# Range data
+# # Add to aircraft
+# conceptualAircraft.addComponents(wing=conceptualWing, motor=conceptualMotor)
+
+# # Create objects and populate it
+# atmospheric = parameters['atmospheric_conditions']
+# aerodynamics = parameters['aerodynamics']
+# performance = parameters['performance']
+# propulsion = parameters['propulsion']
+# velocities = parameters['velocities']
+# aircraft = parameters['aircraft']
+# wing = parameters['wing']
+
+# conceptualAtmosphere = Atmospheric(atmospheric['densityDesiredLevel'])
+# conceptualAtmosphere.setGravity(performance['gravity'])
+
+# if atmospheric['units'] == 'metric':
+#     conceptualAtmosphere.setSeaLevel()
+# else:
+#     conceptualAtmosphere.setSeaLevel(metric=False, imperial=True)
+
+# conceptualAircraft = Aircraft()
+# conceptualAircraft.addWeights(mtow=aircraft['mtow'])
+
+# conceptualAircraft.addCoefficients(cdMin=aerodynamics['cdMin'],
+#                                    clMax=aerodynamics['clMax'],
+#                                    clTakeOff=aerodynamics['clTakeOff'],
+#                                    cdTakeOff=aerodynamics['cdTakeOff'])
+
+# conceptualAircraft.addVelocities(vStall=velocities['vStall'],
+#                                  vCruise=velocities['vCruise'],
+#                                  vVertical=velocities['vVertical'])
+
+# conceptualAircraft.setPerformanceData(loadAtBanking=performance['loadAtBanking'],
+#                                       takeOffDistance=performance['takeOffDistance'],
+#                                       groundFrictionCoefficient=performance['groundFrictionCoefficient'])
+
+# conceptualWing = Wing()
+# conceptualWing.addGeometry(arw=wing['arw'],
+#                            lamda=wing['lamda'])
+                        
+# conceptualWing.addCoefficients(oswaldSpan=wing['oswaldSpan'],
+#                                kFactor=wing['kFactor'])
+
+# conceptualPropeller = Propeller()
+# conceptualPropeller.addPropellerSpecs(propellerEff=propulsion['propellerEff'])
+
+# conceptualMotor = Motor(conceptualPropeller)
+# conceptualMotor.addMotorSpecs(maxPower=propulsion['maxPower'],
+#                               thrustToWeight=propulsion['thrustToWeight'])
