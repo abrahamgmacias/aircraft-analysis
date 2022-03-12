@@ -373,6 +373,34 @@ class Atmospheric():
             return object_to_return
 
 
+class MetaClass():
+    def getData(*args):
+        objectToSearch, dictToSearch, arguments, returnDict = args
+    
+        objectToReturn = []
+        if returnDict == True:
+            objectToReturn = {}
+
+        if args == ():
+            if returnDict == False:
+                for element in dictToSearch:
+                    objectToReturn += [dictToSearch[element]]
+                return objectToReturn
+
+            else:
+                return dictToSearch
+
+        else:
+            for arg in arguments:
+                if arg in dictToSearch:
+                    if returnDict == False:
+                        objectToReturn += [dictToSearch[arg]]
+                    else:
+                        objectToReturn[arg] = dictToSearch[arg]
+                 
+            return objectToReturn
+
+
 class LongitudinalStaticStability():
     def __init__(self, aircraft):
         self.ac = aircraft
