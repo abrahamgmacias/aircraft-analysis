@@ -89,6 +89,10 @@ class MetaClass():
                  
             return objectToReturn
 
+    def setData(*args):
+        objectToSet, dictToSet, arguments = args
+        dictToSet.update(arguments)
+
 
 # Aircraft class
 # Apply the same thing for addCoefficients, addVelocities, etc...
@@ -101,23 +105,22 @@ class Aircraft(MetaClass):
         self.weights = {}
 
     # Coefficients must be arrays
-    def addCoefficients(self, **kwargs):
-        self.aeroCoefficients.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' was added to aeroCoefficients"
+    def setAeroCoefficients(self, **kwargs):
+        self.setData(self.aeroCoefficients, kwargs)
     
     # Coefficients must be arrays
-    def addVelocities(self, **kwargs):
-        self.velocities.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' was added to velocities"
+    def setVelocities(self, **kwargs):
+        self.setData(self.velocities, kwargs)
 
     # Components should be classes 
-    def addComponents(self, **kwargs):
-        self.components.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' was added to components" 
+    def setComponents(self, **kwargs):
+        self.setData(self.components, kwargs)
 
-    def addWeights(self, **kwargs):
-        self.weights.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' was added to weights" 
+    def setPerformanceData(self, **kwargs):
+        self.setData(self.performanceData, kwargs)
+
+    def setWeights(self, **kwargs):
+        self.setData(self.aeroCoefficients, kwargs) 
 
     def getAeroCoefficients(self, *args, dict=False):
         return self.getData(self.aeroCoefficients, args, dict)
@@ -125,9 +128,7 @@ class Aircraft(MetaClass):
     def getComponents(self, *args, dict=False): 
         return self.getData(self.components, args, dict)
 
-    def setPerformanceData(self, **kwargs):
-        self.components.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' was added to performace" 
+    
 
 
 # Description can be removed if a tail class is created
