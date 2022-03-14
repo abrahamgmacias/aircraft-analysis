@@ -95,7 +95,6 @@ class MetaClass():
 
 
 # Aircraft class
-# Apply the same thing for addCoefficients, addVelocities, etc...
 class Aircraft(MetaClass):
     def __init__(self):
         self.aeroCoefficients = {}
@@ -129,73 +128,27 @@ class Aircraft(MetaClass):
         return self.getData(self.components, args, dict)
 
     
-
-
 # Description can be removed if a tail class is created
 class Wing(MetaClass):
     def __init__(self, bw=None, cw=None, airfoil=None, description=None):
         self.geometry = {'bw': bw, 'cw': cw, 'airfoil': airfoil}
-        self.wingCoefficients = {}
+        self.aeroCoefficients = {}
         self.description = description
 
     def simpleWingArea(self):
         self.Sw = self.geometry['bw']*self.geometry['cw']
 
-    def addGeometry(self, **kwargs):
-        self.geometry.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' parameter was added to wing geometry" 
+    def setGeometry(self, **kwargs):
+         self.setData(self.geometry, kwargs)
 
-    def addCoefficients(self, **kwargs):
-        self.wingCoefficients.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' was added to wing coefficients"
+    def setAeroCoefficients(self, **kwargs):
+        self.setData(self.aeroCoefficients, kwargs)
         
-    def getCoefficients(self, *args, dict=False):
-        object_to_return = []
-        if dict == True:
-                object_to_return = {}
-
-        if args == ():
-            if dict == False:
-                for element in self.wingCoefficients:
-                    object_to_return += [self.wingCoefficients[element]]
-                return object_to_return
-
-            else:
-                return self.wingCoefficients
-
-        else:
-            for arg in args:
-                if arg in self.wingCoefficients:
-                    if dict == False:
-                        object_to_return += [self.wingCoefficients[arg]]
-                    else:
-                        object_to_return[arg] = self.wingCoefficients[arg]
-                 
-            return object_to_return
+    def getAeroCoefficients(self, *args, dict=False):
+        return self.getData(self.aeroCoefficients, args, dict)
 
     def getGeometry(self, *args, dict=False):
-        object_to_return = []
-        if dict == True:
-                object_to_return = {}
-
-        if args == ():
-            if dict == False:
-                for element in self.geometry:
-                    object_to_return += [self.geometry[element]]
-                return object_to_return
-
-            else:
-                return self.geometry
-
-        else:
-            for arg in args:
-                if arg in self.geometry:
-                    if dict == False:
-                        object_to_return += [self.geometry[arg]]
-                    else:
-                        object_to_return[arg] = self.geometry[arg]
-                 
-            return object_to_return
+        return self.getData(self.geometry, args, dict)
 
 
 # English System, correct at the end
