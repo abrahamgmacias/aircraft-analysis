@@ -62,8 +62,37 @@ class Aerodynamics():
         return (PA - PR) / wto
 
 
+class MetaClass():
+    def getData(*args):
+        objectToSearch, dictToSearch, arguments, returnDict = args
+    
+        objectToReturn = []
+        if returnDict == True:
+            objectToReturn = {}
+
+        if args == ():
+            if returnDict == False:
+                for element in dictToSearch:
+                    objectToReturn += [dictToSearch[element]]
+                return objectToReturn
+
+            else:
+                return dictToSearch
+
+        else:
+            for arg in arguments:
+                if arg in dictToSearch:
+                    if returnDict == False:
+                        objectToReturn += [dictToSearch[arg]]
+                    else:
+                        objectToReturn[arg] = dictToSearch[arg]
+                 
+            return objectToReturn
+
+
 # Aircraft class
-class Aircraft():
+# Apply the same thing for addCoefficients, addVelocities, etc...
+class Aircraft(MetaClass):
     def __init__(self):
         self.aeroCoefficients = {}
         self.performanceData = {}
@@ -90,44 +119,11 @@ class Aircraft():
         self.weights.update(kwargs)
         return f"'{list(kwargs.keys())[-1]}' was added to weights" 
 
-    def getCoefficients(self, *args, dict=False):
-        object_to_return = []
-        if dict == True:
-                object_to_return = {}
-
-        if args == ():
-            if dict == False:
-                for element in self.aeroCoefficients:
-                    object_to_return += [self.aeroCoefficients[element]]
-                return object_to_return
-
-            else:
-                return self.aeroCoefficients
-
-        else:
-            for arg in args:
-                if arg in self.aeroCoefficients:
-                    if dict == False:
-                        object_to_return += [self.aeroCoefficients[arg]]
-                    else:
-                        object_to_return[arg] = self.aeroCoefficients[arg]
-                 
-            return object_to_return
+    def getAeroCoefficients(self, *args, dict=False):
+        return self.getData(self.aeroCoefficients, args, dict)
         
     def getComponents(self, *args, dict=False): 
-        objectToReturn = []
-        if dict == True:
-            objectToReturn = {}
-
-        for arg in args:
-            if arg in self.components:
-                element = self.components[arg]
-                if dict == False:
-                    objectToReturn += [element]
-                else:
-                    objectToReturn[arg] = element
-
-        return objectToReturn
+        return self.getData(self.components, args, dict)
 
     def setPerformanceData(self, **kwargs):
         self.components.update(kwargs)
@@ -135,7 +131,7 @@ class Aircraft():
 
 
 # Description can be removed if a tail class is created
-class Wing():
+class Wing(MetaClass):
     def __init__(self, bw=None, cw=None, airfoil=None, description=None):
         self.geometry = {'bw': bw, 'cw': cw, 'airfoil': airfoil}
         self.wingCoefficients = {}
@@ -202,7 +198,7 @@ class Wing():
 
 
 # English System, correct at the end
-class Propeller():
+class Propeller(MetaClass):
     coefficient_location = {'thrust_coeffs': 'thrust_coefficient_', 'power_coeffs': 'power_coefficient_'}
 
     def __init__(self, diameter=None, pitch=None):
@@ -281,7 +277,7 @@ class Propeller():
             return object_to_return
 
 
-class Motor():
+class Motor(MetaClass):
     def __init__(self, propeller, max_rpm=None, max_voltage=None, max_amperage=None, rpm_voltage=None):
         self.propeller = propeller
 
@@ -371,34 +367,6 @@ class Atmospheric():
                         object_to_return[arg] = self.airConditions[arg]
                  
             return object_to_return
-
-
-class MetaClass():
-    def getData(*args):
-        objectToSearch, dictToSearch, arguments, returnDict = args
-    
-        objectToReturn = []
-        if returnDict == True:
-            objectToReturn = {}
-
-        if args == ():
-            if returnDict == False:
-                for element in dictToSearch:
-                    objectToReturn += [dictToSearch[element]]
-                return objectToReturn
-
-            else:
-                return dictToSearch
-
-        else:
-            for arg in arguments:
-                if arg in dictToSearch:
-                    if returnDict == False:
-                        objectToReturn += [dictToSearch[arg]]
-                    else:
-                        objectToReturn[arg] = dictToSearch[arg]
-                 
-            return objectToReturn
 
 
 class LongitudinalStaticStability():
