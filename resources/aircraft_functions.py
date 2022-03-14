@@ -156,8 +156,14 @@ class Propeller(MetaClass):
     coefficient_location = {'thrust_coeffs': 'thrust_coefficient_', 'power_coeffs': 'power_coefficient_'}
 
     def __init__(self, diameter=None, pitch=None):
-        self.propellerSpecs = {'diameter': diameter, 'pitch': pitch}
+        self.specs = {'diameter': diameter, 'pitch': pitch}
 
+    def setPropellerSpecs(self, **kwargs):
+        self.setData(self.specs, kwargs)
+
+    def getPropellerSpecs(self, *args, dict=False):
+        return self.getData(self.specs, args, dict)
+    
     def getPitchDiameterRatio(self):
         pitchDiameterRatio = self.propellerSpecs['pitch'] / self.propellerSpecs['diameter']
         self.propellerSpecs['pitchDiameter'] = pitchDiameterRatio
@@ -201,34 +207,6 @@ class Propeller(MetaClass):
     def ctFactored(self, thrust, air_density, rpm):
         Ct = thrust / (air_density*(rpm**2)*(self.propellerSpecs['diameter']**4))
         return Ct
-
-    def addPropellerSpecs(self, **kwargs):
-        self.propellerSpecs.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' was added to propellerSpecs"
-
-    def getCoefficients(self, *args, dict=False):
-        object_to_return = []
-        if dict == True:
-                object_to_return = {}
-
-        if args == ():
-            if dict == False:
-                for element in self.propellerSpecs:
-                    object_to_return += [self.propellerSpecs[element]]
-                return object_to_return
-
-            else:
-                return self.propellerSpecs
-
-        else:
-            for arg in args:
-                if arg in self.propellerSpecs:
-                    if dict == False:
-                        object_to_return += [self.propellerSpecs[arg]]
-                    else:
-                        object_to_return[arg] = self.propellerSpecs[arg]
-                 
-            return object_to_return
 
 
 class Motor(MetaClass):
