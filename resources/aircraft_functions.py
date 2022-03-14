@@ -213,16 +213,19 @@ class Motor(MetaClass):
     def __init__(self, propeller, max_rpm=None, max_voltage=None, max_amperage=None, rpm_voltage=None):
         self.propeller = propeller
 
-        self.motorSpecs = {'max_rpm': max_rpm, 'max_voltage': max_voltage,
+        self.specs = {'max_rpm': max_rpm, 'max_voltage': max_voltage,
                            'max_amperage': max_amperage, 'rpm_voltage': rpm_voltage}
 
     def setMotorData(self, file):
         self.motor_data = pd.read_csv(file)
 
-    def addMotorSpecs(self, **kwargs):
+    def setMotorSpecs(self, **kwargs):
         self.motorSpecs.update(kwargs)
         return f"'{list(kwargs.keys())[-1]}' was added to motorSpecs"
 
+    def getPropeller(self):
+        return self.propeller 
+    
     def simpleMaxPower(self):
         simple_power = self.motorSpecs['max_voltage']*self.motorSpecs['max_voltage']
         return round(simple_power, 4)
@@ -249,9 +252,6 @@ class Motor(MetaClass):
     def velocity(self, J, rpm):
         v = J*(rpm/60)*(self.propeller.diameter/12)
         return v
-
-    def getPropeller(self):
-        return self.propeller    
 
 
 class Atmospheric():
