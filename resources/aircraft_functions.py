@@ -83,7 +83,7 @@ class MetaClass():
         if returnDict == True:
             objectToReturn = {}
 
-        if args == ():
+        if arguments == ():
             if returnDict == False:
                 for element in dictToSearch:
                     objectToReturn += [dictToSearch[element]]
