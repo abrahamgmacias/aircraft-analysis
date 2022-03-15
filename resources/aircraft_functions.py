@@ -254,7 +254,7 @@ class Motor(MetaClass):
         return v
 
 
-class Atmospheric():
+class Atmospheric(MetaClass):
     def __init__(self, curr_density, curr_temperature=None, curr_height=None):
         self.airConditions = {'currTemperature': curr_temperature, 'currDensity': curr_density,
                               'currHeight': curr_height}
@@ -277,28 +277,7 @@ class Atmospheric():
         return 'Gravity set successfully.'
 
     def getCurrentAirConditions(self, *args, dict=False):
-        object_to_return = []
-        if dict == True:
-                object_to_return = {}
-
-        if args == ():
-            if dict == False:
-                for element in self.airConditions:
-                    object_to_return += [self.airConditions[element]]
-                return object_to_return
-
-            else:
-                return self.airConditions
-
-        else:
-            for arg in args:
-                if arg in self.airConditions:
-                    if dict == False:
-                        object_to_return += [self.airConditions[arg]]
-                    else:
-                        object_to_return[arg] = self.airConditions[arg]
-                 
-            return object_to_return
+        return self.getData(self.airConditions, args, dict)
 
 
 class LongitudinalStaticStability():
