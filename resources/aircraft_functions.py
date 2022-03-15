@@ -63,6 +63,9 @@ class Aerodynamics():
 
 
 class MetaClass():
+    # def __init__(self):
+    #     self.aeroCoefficients = {}
+
     def getData(*args):
         objectToSearch, dictToSearch, arguments, returnDict = args
     
@@ -158,10 +161,10 @@ class Propeller(MetaClass):
     def __init__(self, diameter=None, pitch=None):
         self.specs = {'diameter': diameter, 'pitch': pitch}
 
-    def setPropellerSpecs(self, **kwargs):
+    def setSpecs(self, **kwargs):
         self.setData(self.specs, kwargs)
 
-    def getPropellerSpecs(self, *args, dict=False):
+    def getSpecs(self, *args, dict=False):
         return self.getData(self.specs, args, dict)
     
     def getPitchDiameterRatio(self):
@@ -169,8 +172,8 @@ class Propeller(MetaClass):
         self.propellerSpecs['pitchDiameter'] = pitchDiameterRatio
         return pitchDiameterRatio
         
-    def getPropellerData(self, prefix):
-        return pd.read_csv(f'{prefix}{self.propellerSpecs["pitch_diameter"]}.csv')
+    # def getData(self, prefix):
+    #     return pd.read_csv(f'{prefix}{self.propellerSpecs["pitch_diameter"]}.csv')
 
     # If input: Cp / Ct - output: J (And viceversa) - Handles Parabolas
     def getCoefficientRatio(self, value, prefix, Cp=False, Ct=False, J=False):
@@ -212,26 +215,24 @@ class Propeller(MetaClass):
 class Motor(MetaClass):
     def __init__(self, propeller, max_rpm=None, max_voltage=None, max_amperage=None, rpm_voltage=None):
         self.propeller = propeller
-
         self.specs = {'max_rpm': max_rpm, 'max_voltage': max_voltage,
-                           'max_amperage': max_amperage, 'rpm_voltage': rpm_voltage}
+                      'max_amperage': max_amperage, 'rpm_voltage': rpm_voltage}
 
-    def setMotorData(self, file):
+    def setData(self, file):
         self.motor_data = pd.read_csv(file)
 
-    def setMotorSpecs(self, **kwargs):
-        self.motorSpecs.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' was added to motorSpecs"
+    def setSpecs(self, **kwargs):
+        self.specs.update(kwargs)
 
     def getPropeller(self):
         return self.propeller 
     
     def simpleMaxPower(self):
-        simple_power = self.motorSpecs['max_voltage']*self.motorSpecs['max_voltage']
+        simple_power = self.specs['max_voltage']*self.specs['max_voltage']
         return round(simple_power, 4)
 
     def complexMaxPower(self):
-        complexPower = self.motorSpecs['max_rpm']*(1/self.motorSpecs['rpm_voltage'])*self.motorSpecs['max_voltage']
+        complexPower = self.specs['max_rpm']*(1/self.specs['rpm_voltage'])*self.specs['max_voltage']
         return complexPower
 
     def thrust(self, Ct, air_density, rpm):
@@ -287,32 +288,32 @@ class LongitudinalStaticStability():
 
     def setTail(self, tailName):
         self.acTail = self.ac.getComponents(tailName)[0]
-        self.acTailCoefficients = self.acTail.wingCoefficients
+        self.acTailCoefficients = self.acTail.aeroCoefficients
         self.acWingGeometry = self.acTail.geometry
         return 'Tail object has been set properly.'
 
     def setWing(self, wingName):
         self.acWing = self.ac.getComponents(wingName)[0]
-        self.acWingCoefficients = self.acWing.wingCoefficients
+        self.acWingCoefficients = self.acWing.aeroCoefficients
         self.acWingGeometry = self.acWing.geometry
         return 'Wing object has been set properly.'
 
     def setMotor(self, motorName):
         self.acMotor = self.ac.getComponents(motorName)[0]
-        self.acMotorCoefficients = self.acMotor.motorSpecs
+        self.acMotorCoefficients = self.acMotor.specs
         return 'Wing object has been set properly.'
     
     # Cornell
     def cmAlpha(self):
-        x_cg_cw, x_ac_cw = self.ac.getCoefficients('x_cg_cw', 'x_ac_cw')
-        epsilonAlpha = self.ac.getCoefficients('epsilonAlpha')[0]
-        nEff = self.acMotor.propeller.getCoefficients('nEff')[0]
-        vh, at = self.acTail.getCoefficients('vh', 'at')
-        aw = self.acWing.getCoefficients('aw')[0]
+        x_cg_cw, x_ac_cw = self.ac.getAeroCoefficients('x_cg_cw', 'x_ac_cw')
+        epsilonAlpha = self.ac.getAeroCoefficients('epsilonAlpha')[0]
+        nEff = self.acMotor.propeller.getSpecs('nEff')[0]
+        vh, at = self.acTail.getAeroCoefficients('vh', 'at')
+        aw = self.acWing.getAeroCoefficients('aw')[0]
 
         staticMargin = x_cg_cw - x_ac_cw
         cmAlpha  = staticMargin*aw - nEff*vh*at*(1-epsilonAlpha)
-        self.ac.addCoefficients(cmAlpha=cmAlpha)
+        self.ac.setAeroCoefficients(cmAlpha=cmAlpha)
         return round(cmAlpha, 4)
 
     # Epsilon @ AoA = 0
@@ -320,56 +321,56 @@ class LongitudinalStaticStability():
         cl_0w = self.acWingCoefficients['cl0w']
 
         epsilon0 = 2*cl_0w / (self.acWingGeometry['arw']*math.pi) 
-        self.ac.addCoefficients(epsilon0=epsilon0)
+        self.ac.setAeroCoefficients(epsilon0=epsilon0)
         return round(epsilon0, 4)
 
     # Epsilon In Function of AoA - dE/alpha - Downwash - 1/rad
     def epsilonAlpha(self):
-        aw = self.acWing.getCoefficients('aw')[0]
+        aw = self.acWing.getAeroCoefficients('aw')[0]
 
         epsilonAlpha = 2*aw / (self.acWingGeometry['arw']*math.pi)
-        self.ac.addCoefficients(epsilonAlpha=epsilonAlpha)
+        self.ac.setAeroCoefficients(epsilonAlpha=epsilonAlpha)
         return round(epsilonAlpha, 4)
 
     def liftCoefZero(self):
-        aw, alpha_0w = self.acWing.getCoefficients('aw', 'alpha0w')
-        nEff = self.acMotor.propeller.getCoefficients('nEff')[0]
-        epsilon0 = self.ac.getCoefficients('epsilon0')[0]
+        aw, alpha_0w = self.acWing.getAeroCoefficients('aw', 'alpha0w')
+        nEff = self.acMotor.propeller.getSpecs('nEff')[0]
+        epsilon0 = self.ac.getAeroCoefficients('epsilon0')[0]
         iw, sw = self.acWing.getGeometry('iw', 'sw')
         st, it = self.acTail.getGeometry('st', 'it')
-        at = self.acTail.getCoefficients('at')[0]
+        at = self.acTail.getAeroCoefficients('at')[0]
 
         cl0 = aw*(iw - alpha_0w) + nEff*(st/sw)*at*(it - epsilon0)
-        self.ac.addCoefficients(cl0=cl0)
+        self.ac.setAeroCoefficients(cl0=cl0)
         return round(cl0, 4)
 
     def alphaZero(self):
-        cl0 = self.ac.getCoefficients('cl0')[0]
-        aw = self.acWing.getCoefficients('aw')[0]
+        cl0 = self.ac.getAeroCoefficients('cl0')[0]
+        aw = self.acWing.getAeroCoefficients('aw')[0]
         
         alpha0 = -cl0 / aw
-        self.ac.addCoefficients(alpha0=alpha0)
+        self.ac.setAeroCoefficients(alpha0=alpha0)
         return round(alpha0, 4)
 
     # Cornell - Eq. 3.17
     def cmZero(self):
-        epsilon0, epsilonAlpha = self.ac.getCoefficients('epsilon0', 'epsilonAlpha')
-        nEff = self.acMotor.propeller.getCoefficients('nEff')[0]
-        vh, at = self.acTail.getCoefficients('vh', 'at')
-        cm0w = self.acWing.getCoefficients('cm0w')[0]
-        alpha0 = self.ac.getCoefficients('alpha0')[0]
+        epsilon0, epsilonAlpha = self.ac.getAeroCoefficients('epsilon0', 'epsilonAlpha')
+        nEff = self.acMotor.propeller.getSpecs('nEff')[0]
+        vh, at = self.acTail.getAeroCoefficients('vh', 'at')
+        cm0w = self.acWing.getAeroCoefficients('cm0w')[0]
+        alpha0 = self.ac.getAeroCoefficients('alpha0')[0]
         it = self.acTail.getGeometry('it')[0]
 
         cm0 = cm0w - nEff*vh*at*(it - epsilon0 + (1-epsilonAlpha)*alpha0)
-        self.ac.addCoefficients(cm0=cm0)
+        self.ac.setAeroCoefficients(cm0=cm0)
         return round(cm0, 4)
 
     # E and R
     def alphaEquilibrium(self):
-        cm0, cmAlpha, alpha0 = self.ac.getCoefficients('cm0', 'cmAlpha', 'alpha0')
+        cm0, cmAlpha, alpha0 = self.ac.getAeroCoefficients('cm0', 'cmAlpha', 'alpha0')
 
         alphaEq = (-cm0 / cmAlpha) - abs(alpha0)
-        self.ac.addCoefficients(alphaEq=alphaEq)
+        self.ac.setAeroCoefficients(alphaEq=alphaEq)
         return round(alphaEq, 4)
 
 
