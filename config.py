@@ -28,22 +28,16 @@ config_data = {
 
                             'constraint_analysis': {
                                                  'parameters': {
-                                                                 'velocities': {
-                                                                                'vStall': None,
-                                                                                'vCruise': None,
-                                                                                'vVertical': None,
-                                                                 }, 
-
                                                                  'atmospheric_conditions': {
-                                                                           'units': 'metric',
+                                                                           'densitySeaLevel': 1.225,
                                                                            'densityDesiredLevel': None
                                                                  }, 
 
                                                                  'wing': {
                                                                            'arw': None,
                                                                            'lamda': None,
-                                                                           'oswaldSpan': None,
-                                                                           'kFactor': None
+                                                                           'kFactor': None,
+                                                                           'oswaldSpan': None
                                                                  },
 
                                                                  'propulsion': {
@@ -57,10 +51,14 @@ config_data = {
                                                                  },
 
                                                                  'performance': {
+                                                                           'vStall': None,
+                                                                           'vCruise': None,
+                                                                           'vVertical': None,
+                                                                           'gravity': 9.807,
                                                                            'loadAtBanking': None,
                                                                            'takeOffDistance': None,
                                                                            'groundFrictionCoefficient': None,
-                                                                           'gravity': 9.807
+                                                                           
                                                                  }, 
 
                                                                  'aerodynamics': {
@@ -79,4 +77,3 @@ config_data = {
                             }
             }
 }
-

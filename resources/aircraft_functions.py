@@ -1,5 +1,6 @@
 from urllib import request
 import pandas as pd
+import numpy as np
 import math
 
 # Remove boilerplate code by using decorators?
@@ -61,153 +62,108 @@ class Aerodynamics():
         return (PA - PR) / wto
 
 
-# Aircraft class
-class Aircraft():
-    def __init__(self):
-        self.aeroCoefficients = {}
-
-        # Wing, empenage, landing gear, etc...
-        self.components = {}
-
-        # Empty weight, MTOW, etc...
-        self.weights = {}
-
-        # Vs, Vc, Ve, etc...
-        self.velocities = {}
-
-    # Coefficients must be arrays
-    def addCoefficients(self, **kwargs):
-        self.aeroCoefficients.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' was added to aeroCoefficients"
+class MetaClass():
+    def getData(*args):
+        objectToSearch, dictToSearch, arguments, returnDict = args
     
-    # Coefficients must be arrays
-    def addVelocities(self, **kwargs):
-        self.velocities.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' was added to velocities"
-
-    # Components should be classes 
-    def addComponents(self, **kwargs):
-        self.components.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' was added to components" 
-
-    def addWeights(self, **kwargs):
-        self.weights.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' was added to weights" 
-
-    def getCoefficients(self, *args, dict=False):
-        object_to_return = []
-        if dict == True:
-                object_to_return = {}
-
-        if args == ():
-            if dict == False:
-                for element in self.aeroCoefficients:
-                    object_to_return += [self.aeroCoefficients[element]]
-                return object_to_return
-
-            else:
-                return self.aeroCoefficients
-
-        else:
-            for arg in args:
-                if arg in self.aeroCoefficients:
-                    if dict == False:
-                        object_to_return += [self.aeroCoefficients[arg]]
-                    else:
-                        object_to_return[arg] = self.aeroCoefficients[arg]
-                 
-            return object_to_return
-        
-    def getComponents(self, *args, dict=False): 
         objectToReturn = []
-        if dict == True:
+        if returnDict == True:
             objectToReturn = {}
 
-        for arg in args:
-            if arg in self.components:
-                element = self.components[arg]
-                if dict == False:
-                    objectToReturn += [element]
-                else:
-                    objectToReturn[arg] = element
+        if args == ():
+            if returnDict == False:
+                for element in dictToSearch:
+                    objectToReturn += [dictToSearch[element]]
+                return objectToReturn
 
-        return objectToReturn
+            else:
+                return dictToSearch
+
+        else:
+            for arg in arguments:
+                if arg in dictToSearch:
+                    if returnDict == False:
+                        objectToReturn += [dictToSearch[arg]]
+                    else:
+                        objectToReturn[arg] = dictToSearch[arg]
+                 
+            return objectToReturn
+
+    def setData(*args):
+        objectToSet, dictToSet, arguments = args
+        dictToSet.update(arguments)
 
 
+# Aircraft class
+class Aircraft(MetaClass):
+    def __init__(self):
+        self.aeroCoefficients = {}
+        self.performanceData = {}
+        self.components = {}
+        self.velocities = {}
+        self.weights = {}
+
+    # Coefficients must be arrays
+    def setAeroCoefficients(self, **kwargs):
+        self.setData(self.aeroCoefficients, kwargs)
+    
+    # Coefficients must be arrays
+    def setVelocities(self, **kwargs):
+        self.setData(self.velocities, kwargs)
+
+    # Components should be classes 
+    def setComponents(self, **kwargs):
+        self.setData(self.components, kwargs)
+
+    def setPerformanceData(self, **kwargs):
+        self.setData(self.performanceData, kwargs)
+
+    def setWeights(self, **kwargs):
+        self.setData(self.aeroCoefficients, kwargs) 
+
+    def getAeroCoefficients(self, *args, dict=False):
+        return self.getData(self.aeroCoefficients, args, dict)
+        
+    def getComponents(self, *args, dict=False): 
+        return self.getData(self.components, args, dict)
+
+    
 # Description can be removed if a tail class is created
-class Wing():
+class Wing(MetaClass):
     def __init__(self, bw=None, cw=None, airfoil=None, description=None):
         self.geometry = {'bw': bw, 'cw': cw, 'airfoil': airfoil}
-        self.wingCoefficients = {}
+        self.aeroCoefficients = {}
         self.description = description
 
     def simpleWingArea(self):
         self.Sw = self.geometry['bw']*self.geometry['cw']
 
-    def addGeometry(self, **kwargs):
-        self.geometry.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' parameter was added to wing geometry" 
+    def setGeometry(self, **kwargs):
+         self.setData(self.geometry, kwargs)
 
-    def addCoefficients(self, **kwargs):
-        self.wingCoefficients.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' was added to wing coefficients"
+    def setAeroCoefficients(self, **kwargs):
+        self.setData(self.aeroCoefficients, kwargs)
         
-    def getCoefficients(self, *args, dict=False):
-        object_to_return = []
-        if dict == True:
-                object_to_return = {}
-
-        if args == ():
-            if dict == False:
-                for element in self.wingCoefficients:
-                    object_to_return += [self.wingCoefficients[element]]
-                return object_to_return
-
-            else:
-                return self.wingCoefficients
-
-        else:
-            for arg in args:
-                if arg in self.wingCoefficients:
-                    if dict == False:
-                        object_to_return += [self.wingCoefficients[arg]]
-                    else:
-                        object_to_return[arg] = self.wingCoefficients[arg]
-                 
-            return object_to_return
+    def getAeroCoefficients(self, *args, dict=False):
+        return self.getData(self.aeroCoefficients, args, dict)
 
     def getGeometry(self, *args, dict=False):
-        object_to_return = []
-        if dict == True:
-                object_to_return = {}
-
-        if args == ():
-            if dict == False:
-                for element in self.geometry:
-                    object_to_return += [self.geometry[element]]
-                return object_to_return
-
-            else:
-                return self.geometry
-
-        else:
-            for arg in args:
-                if arg in self.geometry:
-                    if dict == False:
-                        object_to_return += [self.geometry[arg]]
-                    else:
-                        object_to_return[arg] = self.geometry[arg]
-                 
-            return object_to_return
+        return self.getData(self.geometry, args, dict)
 
 
 # English System, correct at the end
-class Propeller():
+class Propeller(MetaClass):
     coefficient_location = {'thrust_coeffs': 'thrust_coefficient_', 'power_coeffs': 'power_coefficient_'}
 
     def __init__(self, diameter=None, pitch=None):
-        self.propellerSpecs = {'diameter': diameter, 'pitch': pitch}
+        self.specs = {'diameter': diameter, 'pitch': pitch}
 
+    def setPropellerSpecs(self, **kwargs):
+        self.setData(self.specs, kwargs)
+
+    def getPropellerSpecs(self, *args, dict=False):
+        return self.getData(self.specs, args, dict)
+    
     def getPitchDiameterRatio(self):
         pitchDiameterRatio = self.propellerSpecs['pitch'] / self.propellerSpecs['diameter']
         self.propellerSpecs['pitchDiameter'] = pitchDiameterRatio
@@ -252,50 +208,24 @@ class Propeller():
         Ct = thrust / (air_density*(rpm**2)*(self.propellerSpecs['diameter']**4))
         return Ct
 
-    def addPropellerSpecs(self, **kwargs):
-        self.propellerSpecs.update(kwargs)
-        return f"'{list(kwargs.keys())[-1]}' was added to propellerSpecs"
 
-    def getCoefficients(self, *args, dict=False):
-        object_to_return = []
-        if dict == True:
-                object_to_return = {}
-
-        if args == ():
-            if dict == False:
-                for element in self.propellerSpecs:
-                    object_to_return += [self.propellerSpecs[element]]
-                return object_to_return
-
-            else:
-                return self.propellerSpecs
-
-        else:
-            for arg in args:
-                if arg in self.propellerSpecs:
-                    if dict == False:
-                        object_to_return += [self.propellerSpecs[arg]]
-                    else:
-                        object_to_return[arg] = self.propellerSpecs[arg]
-                 
-            return object_to_return
-
-
-
-class Motor():
+class Motor(MetaClass):
     def __init__(self, propeller, max_rpm=None, max_voltage=None, max_amperage=None, rpm_voltage=None):
         self.propeller = propeller
 
-        self.motorSpecs = {'max_rpm': max_rpm, 'max_voltage': max_voltage,
+        self.specs = {'max_rpm': max_rpm, 'max_voltage': max_voltage,
                            'max_amperage': max_amperage, 'rpm_voltage': rpm_voltage}
 
     def setMotorData(self, file):
         self.motor_data = pd.read_csv(file)
 
-    def addMotorSpecs(self, **kwargs):
+    def setMotorSpecs(self, **kwargs):
         self.motorSpecs.update(kwargs)
         return f"'{list(kwargs.keys())[-1]}' was added to motorSpecs"
 
+    def getPropeller(self):
+        return self.propeller 
+    
     def simpleMaxPower(self):
         simple_power = self.motorSpecs['max_voltage']*self.motorSpecs['max_voltage']
         return round(simple_power, 4)
@@ -323,15 +253,11 @@ class Motor():
         v = J*(rpm/60)*(self.propeller.diameter/12)
         return v
 
-    def getPropeller(self):
-        return self.propeller    
 
-
-# Placeholder class to append methods to 
 class Atmospheric():
     def __init__(self, curr_density, curr_temperature=None, curr_height=None):
         self.airConditions = {'currTemperature': curr_temperature, 'currDensity': curr_density,
-                               'currHeight': curr_height}
+                              'currHeight': curr_height}
 
     def atmosphericRatio(self):
         return Atmospheric.air_densities[0] / self.airConditions['curr_density']
@@ -349,6 +275,31 @@ class Atmospheric():
     def setGravity(self, gravity):
         self.airConditions['gravity'] = gravity
         return 'Gravity set successfully.'
+
+    def getCurrentAirConditions(self, *args, dict=False):
+        object_to_return = []
+        if dict == True:
+                object_to_return = {}
+
+        if args == ():
+            if dict == False:
+                for element in self.airConditions:
+                    object_to_return += [self.airConditions[element]]
+                return object_to_return
+
+            else:
+                return self.airConditions
+
+        else:
+            for arg in args:
+                if arg in self.airConditions:
+                    if dict == False:
+                        object_to_return += [self.airConditions[arg]]
+                    else:
+                        object_to_return[arg] = self.airConditions[arg]
+                 
+            return object_to_return
+
 
 class LongitudinalStaticStability():
     def __init__(self, aircraft):
@@ -443,6 +394,75 @@ class LongitudinalStaticStability():
         return round(alphaEq, 4)
 
 
+class Constraints():
+    # Métodos para encontrar T/W
+    @staticmethod
+    def turn(ws, densitySeaLevel, vCruise, cdMin, loadFactor, kFactor):  #Constant velocity turn
+        q_turn = 0.5*(densitySeaLevel)*(vCruise**2)
+        firstTerm = (cdMin)/(ws)
+        secondTerm = (loadFactor)/(q_turn)
+        return q_turn*(firstTerm + kFactor*(secondTerm**2)*ws)
+    
+    @staticmethod
+    def rateOfClimb(ws, densitySeaLevel, vVertical, cdMin, kFactor): #Rate of Climb
+        rateOfClimbSpeed = np.sqrt((2/densitySeaLevel)*ws*np.sqrt(kFactor/(3*cdMin)))
+        qClimb = 0.5*densitySeaLevel*(rateOfClimbSpeed**2)
+        return (vVertical/rateOfClimbSpeed + (qClimb/ws)*cdMin) + (kFactor/qClimb)*ws
+
+    @staticmethod
+    def takeoff(ws, densitySeaLevel): #Desired Takeoff Distance
+        vto = 1.2*np.sqrt(ws*(2/(densitySeaLevel*self.CLmax)))
+        q_takeoff = 0.5*densitySeaLevel*(vto**2)
+        return (vto**2)/(2*self.g*self.to_d) + (q_takeoff*self.CDto)/ws + self.mu*(1-(q_takeoff*self.CLto)/ws)
+
+    @staticmethod
+    def cruise(ws, densitySeaLevel): #Desired cruise Airspeed
+        q_cruise = 0.5*densitySeaLevel*(vc**2)
+        return q_cruise*cdMin*(1/ws) + kFactor*(1/q_cruise)*ws
+    
+    def CLmax1(self):
+        q_stall1 = 0.5*densitySeaLevel*(self.vs**2)
+        return (1/q_stall1)*ws
+
+    def CLmax2(self):
+        q_stall2 = 0.5*densitySeaLevel*((self.vs-2)**2)
+        return (1/q_stall2)*ws
+
+    def CLmax3(self):
+        q_stall3 = 0.5*densitySeaLevel*((self.vs+2)**2)
+        return (1/q_stall3)*ws
+
+    def CLmax4(self):
+        q_stall4 = 0.5*densitySeaLevel*((self.vs+4)**2)
+        return (1/q_stall4)*ws
+
+    def CLmax5(self):
+        q_stall5 = 0.5*densitySeaLevel*((self.vs-4)**2)
+        return (1/q_stall5)*ws
+        
+    def plot(self):
+        fig, ax1 = plt.subplots()
+        ax1.plot(ws, self.turn(), color = 'black',label='Constant velocity turn')
+        ax1.plot(ws, self.roc(), color = 'red',label='Rate of Climb')
+        ax1.plot(ws, self.takeoff(), color = 'blue',label='Desired Takeoff Distance')
+        ax1.plot(ws, self.cruise(), color = 'yellow',label='Desired cruise Airspeed')
+        ax1.hlines(self.tw_real, 30, 170, colors='k', linestyles='dashed',label='T/W Real posible con Vcrucero')
+
+        ax2 = ax1.twinx()
+        ax2.set_ylabel('CLmax',fontsize=25)
+        ax2.plot(ws, self.CLmax1(), color = 'k', linestyle='-.',label='Recta Vstall = 12 m/s')
+        ax2.plot(ws, self.CLmax2(), color = 'b', linestyle='-.',label='Recta Vstall = 10 m/s')
+        ax2.plot(ws, self.CLmax3(), color = 'r', linestyle='-.',label='Recta Vstall = 14 m/s')
+        ax2.plot(ws, self.CLmax4(), color = 'magenta', linestyle='-.',label='Recta Vstall = 16 m/s')
+        #ax2.plot(ws, self.CLmax5(), color = 'green', linestyle='-.',label='Recta Vstall = 8 m/s')
+        plt.title('Constraint Diagram', fontsize = 25,fontweight='bold')
+
+        ax1.set_ylabel('T/W', fontsize = 25)
+        ax1.set_xlabel(' W/S (N/m^2)', fontsize = 25)
+        ax1.legend()
+        ax2.legend(loc='upper center')
+        fig.tight_layout()
+        plt.show()
 
 
 
