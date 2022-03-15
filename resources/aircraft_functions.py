@@ -63,9 +63,19 @@ class Aerodynamics():
 
 
 class MetaClass():
-    # def __init__(self):
-    #     self.aeroCoefficients = {}
+    def __init__(self):
+        self.aeroCoefficients = {}
 
+    def setData(*args):
+        objectToSet, dictToSet, arguments = args
+        dictToSet.update(arguments)
+
+    def setAeroCoefficients(self, **kwargs):
+        self.setData(self.aeroCoefficients, kwargs)
+
+    def getAeroCoefficients(self, *args, dict=False):
+        return self.getData(self.aeroCoefficients, args, dict)
+        
     def getData(*args):
         objectToSearch, dictToSearch, arguments, returnDict = args
     
@@ -92,25 +102,16 @@ class MetaClass():
                  
             return objectToReturn
 
-    def setData(*args):
-        objectToSet, dictToSet, arguments = args
-        dictToSet.update(arguments)
-
 
 # Aircraft class
 class Aircraft(MetaClass):
     def __init__(self):
-        self.aeroCoefficients = {}
         self.performanceData = {}
         self.components = {}
         self.velocities = {}
         self.weights = {}
-
-    # Coefficients must be arrays
-    def setAeroCoefficients(self, **kwargs):
-        self.setData(self.aeroCoefficients, kwargs)
+        super().__init__()
     
-    # Coefficients must be arrays
     def setVelocities(self, **kwargs):
         self.setData(self.velocities, kwargs)
 
@@ -123,9 +124,6 @@ class Aircraft(MetaClass):
 
     def setWeights(self, **kwargs):
         self.setData(self.aeroCoefficients, kwargs) 
-
-    def getAeroCoefficients(self, *args, dict=False):
-        return self.getData(self.aeroCoefficients, args, dict)
         
     def getComponents(self, *args, dict=False): 
         return self.getData(self.components, args, dict)
@@ -143,12 +141,6 @@ class Wing(MetaClass):
 
     def setGeometry(self, **kwargs):
          self.setData(self.geometry, kwargs)
-
-    def setAeroCoefficients(self, **kwargs):
-        self.setData(self.aeroCoefficients, kwargs)
-        
-    def getAeroCoefficients(self, *args, dict=False):
-        return self.getData(self.aeroCoefficients, args, dict)
 
     def getGeometry(self, *args, dict=False):
         return self.getData(self.geometry, args, dict)
