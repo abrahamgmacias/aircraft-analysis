@@ -20,6 +20,7 @@ motor.setSpecs(paMax=32)              # placeholder pa_max
 propeller.setSpecs(nEff=0.95)
 
 atmosphere = af.Atmospheric(1.225)
+atmosphere.setUnits()
 
 # Data appending for static_stability.py
 # Must create a tail class... can modify the wing class to morph into a tail

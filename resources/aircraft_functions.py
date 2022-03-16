@@ -258,8 +258,17 @@ class Atmospheric(MetaClass):
         self.airConditions = {'currTemperature': curr_temperature, 'currDensity': curr_density,
                               'currHeight': curr_height}
 
+    def setUnits(self, metric=True, imperial=False):
+        if metric == True:
+            self.units = 'metric'
+            return
+
+        else:
+            self.units = 'imperial'
+
     def atmosphericRatio(self):
-        return Atmospheric.air_densities[0] / self.airConditions['curr_density']
+        if self.units == 'metric':
+            return 1.255 / self.airConditions['currDensity']
 
     # Imperial logic missing
     def setSeaLevel(self, metric=True, imperial=False):
