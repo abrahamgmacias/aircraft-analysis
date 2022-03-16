@@ -14,22 +14,22 @@ velocityRange = parameters['velocity_range']
 
 # Data extraction section
 aircraft = config_data['aircraft']
-wto = aircraft.weights['mtow']                       # What if weight varies?
-cd0 = aircraft.aeroCoefficients['cd_0']
-clMinD = aircraft.aeroCoefficients['cl_min_d']
+wto = aircraft.getWeights('mtow')[0]                     # What if weight varies?
+cd0 = aircraft.getAeroCoefficients('cd0')[0]
+clMinD = aircraft.getAeroCoefficients('clMinD')[0]
 
-wing = aircraft.getComponents('wing')
-sw, arw = wing.geometry['Sw'], wing.geometry['ARw']
-ew = wing.wingCoefficients['ew']
+wing = aircraft.getComponents('wing')[0]
+sw, arw = wing.getGeometry('sw', 'arw')
+ew = wing.getAeroCoefficients('ew')[0]
 
-motor = aircraft.getComponents('motor')
-paMax = motor.motorSpecs['pa_max']
+motor = aircraft.getComponents('motor')[0]
+paMax = motor.getSpecs('paMax')[0]
 
 propeller = motor.getPropeller()
-nEff = propeller.propellerSpecs['n_eff']
+nEff = propeller.getSpecs('nEff')[0]
 
 atmosphere = parameters['atmospheric_conditions']
-rho = atmosphere.air_conditions['curr_density']
+rho = atmosphere.airConditions['currDensity']
 
 
 # Execution section

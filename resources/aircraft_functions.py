@@ -123,12 +123,15 @@ class Aircraft(MetaClass):
         self.setData(self.performanceData, kwargs)
 
     def setWeights(self, **kwargs):
-        self.setData(self.aeroCoefficients, kwargs) 
+        self.setData(self.weights, kwargs) 
         
     def getComponents(self, *args, dict=False): 
         return self.getData(self.components, args, dict)
 
+    def getWeights(self, *args, dict=False): 
+        return self.getData(self.weights, args, dict)
     
+
 # Description can be removed if a tail class is created
 class Wing(MetaClass):
     def __init__(self, bw=None, cw=None, airfoil=None, description=None):
@@ -218,6 +221,9 @@ class Motor(MetaClass):
 
     def getPropeller(self):
         return self.propeller 
+
+    def getSpecs(self, *args, dict=False):
+        return self.getData(self.specs, args, dict)
     
     def simpleMaxPower(self):
         simple_power = self.specs['max_voltage']*self.specs['max_voltage']
