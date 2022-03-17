@@ -57,8 +57,7 @@ config_data = {
                                                                            'gravity': 9.807,
                                                                            'loadAtBanking': None,
                                                                            'takeOffDistance': None,
-                                                                           'groundFrictionCoefficient': None,
-                                                                           
+                                                                           'groundFrictionCoefficient': None
                                                                  }, 
 
                                                                  'aerodynamics': {

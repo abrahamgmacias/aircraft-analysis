@@ -16,7 +16,6 @@ atmospheric = parameters['atmospheric_conditions']
 aerodynamics = parameters['aerodynamics']
 performance = parameters['performance']
 propulsion = parameters['propulsion']
-velocities = parameters['velocities']
 aircraft = parameters['aircraft']
 wing = parameters['wing']
 
@@ -26,7 +25,10 @@ arw = wing['arw']
 kFactor = wing['kFactor']
 oswaldSpan = wing['oswaldSpan']
 
+gravity = performance['gravity']
 loadFactor = performance['loadAtBanking']
+takeOffDistance = performance['takeOffDistance']
+groundFrictionCoefficient = performance['groundFrictionCoefficient']
 vVertical = performance['vVertical']
 vCruise = performance['vCruise']
 
@@ -42,8 +44,8 @@ for ws in parameters['ws_range']:
     # Computing section
     turn = con.turn(ws, densitySeaLevel, vCruise, cdMin, loadFactor, kFactor)
     rateOfClimb = con.rateOfClimb(ws, densitySeaLevel, vVertical, cdMin, kFactor)
-    takeOff = con.takeoff()
-    cruise = con.cruise()
+    takeOff = con.takeoff(ws, densitySeaLevel, takeOffDistance, clMax, clTakeOff, cdTakeOff, groundFrictionCoefficient, gravity)
+    cruise = con.cruise(ws, densitySeaLevel, vCruise, cdMin, kFactor)
 
     # Optional constraint section
 
