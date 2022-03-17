@@ -45,11 +45,15 @@ for ws in parameters['ws_range']:
     takeOff = con.takeoff()
     cruise = con.cruise()
 
+    # Optional constraint section
+
     # Appending section
     results['rateOfClimb'] += [rateOfClimb]
     results['takeOff'] += [takeOff]
     results['cruise'] += [cruise]
     results['turn'] += [turn]
+
+    
 
 
 # Exportar la clase a af
