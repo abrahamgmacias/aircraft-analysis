@@ -30,44 +30,45 @@ config_data = {
                                                  'parameters': {
                                                                  'atmospheric_conditions': {
                                                                            'densitySeaLevel': 1.225,
-                                                                           'densityDesiredLevel': None
+                                                                           'densityDesiredLevel': 0.974
                                                                  }, 
 
                                                                  'wing': {
-                                                                           'arw': None,
-                                                                           'lamda': None,
-                                                                           'kFactor': None,
-                                                                           'oswaldSpan': None
+                                                                           'arw': 7.5,
+                                                                           'lamda': 1,
+                                                                           'kFactor': 0.056,
+                                                                           'oswaldSpan': 0.75
                                                                  },
 
                                                                  'propulsion': {
-                                                                           'maxPower': None,
-                                                                           'propellerEff': None,
-                                                                           'thrustToWeight': None
+                                                                           'maxPower': 900,
+                                                                           'propellerEff': 0.8,
+                                                                           'thrustToWeight': 0.24
                                                                  },
 
                                                                  'aircraft': {
-                                                                           'mtow': None
+                                                                           'mtow': 22
                                                                  },
 
                                                                  'performance': {
-                                                                           'vStall': None,
-                                                                           'vCruise': None,
-                                                                           'vVertical': None,
+                                                                           'vStall': 12,
+                                                                           'vCruise': 14,
+                                                                           'vVertical': 0.508,
                                                                            'gravity': 9.807,
-                                                                           'loadAtBanking': None,
-                                                                           'takeOffDistance': None,
-                                                                           'groundFrictionCoefficient': None
+                                                                           'loadAtBanking': 2,
+                                                                           'takeOffDistance': 61,
+                                                                           'groundFrictionCoefficient': 0.05
                                                                  }, 
 
                                                                  'aerodynamics': {
-                                                                           'cdMin': None,
-                                                                           'clMax': None,
-                                                                           'clTakeOff': None,
-                                                                           'cdTakeOff': None,
+                                                                           'cdMin': 0.035,
+                                                                           'clMax': 1.2,
+                                                                           'clTakeOff': 1.2,
+                                                                           'cdTakeOff': 0.04
                                                                  },
 
                                                                  'ws_range': np.linspace(30, 170, 171),
+                                                                 'optional': False
                                                  },
 
                                                  'plotting': False,

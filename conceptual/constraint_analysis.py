@@ -4,8 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 sys.path.append(os.path.realpath('.'))
 from config import config_data
-from resources.aircraft_functions import Constraints as con
-
+from resources.aircraft_functions import OptionalConstraints as con
 
 # Import section
 constraints = config_data['analyses']['constraint_analysis']
@@ -39,7 +38,6 @@ cdTakeOff = aerodynamics['cdTakeOff']
 
 # Execution section
 results = {'turn': [], 'rateOfClimb': [], 'takeOff': [], 'cruise': []}
-
 for ws in parameters['ws_range']:
     # Computing section
     turn = con.turn(ws, densitySeaLevel, vCruise, cdMin, loadFactor, kFactor)
@@ -48,6 +46,8 @@ for ws in parameters['ws_range']:
     cruise = con.cruise(ws, densitySeaLevel, vCruise, cdMin, kFactor)
 
     # Optional constraint section
+    if parameters['optional'] == True:
+        pass
 
     # Appending section
     results['rateOfClimb'] += [rateOfClimb]

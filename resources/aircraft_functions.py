@@ -410,27 +410,37 @@ class Constraints():
         qCruise = 0.5*densitySeaLevel*(vCruise**2)
         return qCruise*cdMin*(1/ws) + kFactor*(1/qCruise)*ws
     
-    # Optional... 
-    def CLmax1(self):
-        q_stall1 = 0.5*densitySeaLevel*(self.vs**2)
-        return (1/q_stall1)*ws
+    
+# Trial subclass
+class OptionalConstraints(Constraints):
+    @staticmethod
+    def clMax1(ws, densitySeaLevel, vStall):
+        qStall = 0.5*densitySeaLevel*pow(vStall)
+        return (1/qStall)*ws
 
-    def CLmax2(self):
-        q_stall2 = 0.5*densitySeaLevel*((self.vs-2)**2)
-        return (1/q_stall2)*ws
+    @staticmethod
+    def clMax2(ws, densitySeaLevel, vStall):
+        qStall = 0.5*densitySeaLevel*pow(vStall-2)
+        return (1/qStall)*ws
 
-    def CLmax3(self):
-        q_stall3 = 0.5*densitySeaLevel*((self.vs+2)**2)
-        return (1/q_stall3)*ws
+    @staticmethod
+    def clMax3(ws, densitySeaLevel, vStall):
+        qStall = 0.5*densitySeaLevel*pow(vStall+2)
+        return (1/qStall)*ws
 
-    def CLmax4(self):
-        q_stall4 = 0.5*densitySeaLevel*((self.vs+4)**2)
-        return (1/q_stall4)*ws
+    @staticmethod
+    def clMax4(ws, densitySeaLevel, vStall):
+        qStall = 0.5*densitySeaLevel*pow(vStall+4)
+        return (1/qStall)*ws
 
-    def CLmax5(self):
-        q_stall5 = 0.5*densitySeaLevel*((self.vs-4)**2)
-        return (1/q_stall5)*ws
+    @staticmethod
+    def clMax5(ws, densitySeaLevel, vStall, qStall):
+        qStall = 0.5*densitySeaLevel*pow(vStall-4)
+        return (1/qStall)*ws
         
+
+
+
     # def plot(self):
     #     fig, ax1 = plt.subplots()
     #     ax1.plot(ws, self.turn(), color = 'black',label='Constant velocity turn')
@@ -454,43 +464,3 @@ class Constraints():
     #     ax2.legend(loc='upper center')
     #     fig.tight_layout()
     #     plt.show()
-
-
-
-# class StaticStability():
-#     def __init__(self, aircraft):
-#         self.ac = aircraft
-#         self.ac_coefficients = aircraft.aeroCoefficients
-
-#     # Cornell
-#     def cmAlpha(self):
-#         cm_a  = (self.ac['aircraft_specs']['x_cg_cw'] - self.ac['aircraft_specs']['x_ac_cw'])*self.ac['general_coefficients']['aw'] - self.ac['aircraft_specs']['n_ef']*self.ac['aircraft_specs']['Vh']*self.ac['general_coefficients']['at']*(1-self.ac['general_coefficients']['epsilon_a'])
-#         return cm_a
-
-#     # Epsilon @ AoA = 0
-#     def epsilonZero(self): 
-#         epsilon_0 = 2*self.ac['general_coefficients']['CL_0w'] / (self.ac['aircraft_specs']['ARw']*math.pi) 
-#         return round(epsilon_0, 4)
-
-#     # Epsilon In Function of AoA - dE/alpha - Downwash - 1/rad
-#     def epsilonAlpha(self):
-#         epsilon_alpha = 2*self.ac['general_coefficients']['aw'] / (self.ac['aircraft_specs']['ARw']*math.pi)
-#         return round(epsilon_alpha, 4)
-
-#     def liftCoefZero(self):
-#         CL_0 = self.ac['general_coefficients']['aw']*(self.ac['aircraft_specs']['iw'] - self.ac['aircraft_specs']['alpha_0w']) + self.ac['aircraft_specs']['n_ef']*(self.ac['aircraft_specs']['St']/self.ac['aircraft_specs']['Sw'])*self.ac['general_coefficients']['at']*(self.ac['aircraft_specs']['it'] - self.ac['general_coefficients']['epsilon_0'])
-#         return round(CL_0, 4)
-
-#     def alphaZero(self):
-#         alpha_0 = -self.ac['general_coefficients']['CL_0'] / self.ac['general_coefficients']['aw']
-#         return round(alpha_0, 4)
-
-#     # Cornell - Eq. 3.17
-#     def cmZero(self, alpha_0):
-#         cm_0 = self.ac['general_coefficients']['Cm_0w'] - self.ac['aircraft_specs']['n_ef']*self.ac['aircraft_specs']['Vh']*self.ac['general_coefficients']['at']*(self.ac['aircraft_specs']['it'] - self.ac['general_coefficients']['epsilon_0'] + (1-self.ac['general_coefficients']['epsilon_a'])*alpha_0)
-#         return round(cm_0, 4)
-
-#     # E and R
-#     def alphaEquilibrium(self):
-#         alpha_e = (-self.ac['general_coefficients']['Cm_0'] / self.ac['general_coefficients']['Cm_a']) - abs(self.ac['aircraft_specs']['alpha_0'])
-#         return round(alpha_e, 4)
