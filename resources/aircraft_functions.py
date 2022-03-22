@@ -409,33 +409,11 @@ class Constraints():
     def cruise(ws, densitySeaLevel, vCruise, cdMin, kFactor): #Desired cruise Airspeed
         qCruise = 0.5*densitySeaLevel*(vCruise**2)
         return qCruise*cdMin*(1/ws) + kFactor*(1/qCruise)*ws
-    
-    
-# Trial subclass
-class OptionalConstraints(Constraints):
-    @staticmethod
-    def clMax1(ws, densitySeaLevel, vStall):
-        qStall = 0.5*densitySeaLevel*pow(vStall)
-        return (1/qStall)*ws
 
+    # Optional method
     @staticmethod
-    def clMax2(ws, densitySeaLevel, vStall):
-        qStall = 0.5*densitySeaLevel*pow(vStall-2)
-        return (1/qStall)*ws
-
-    @staticmethod
-    def clMax3(ws, densitySeaLevel, vStall):
-        qStall = 0.5*densitySeaLevel*pow(vStall+2)
-        return (1/qStall)*ws
-
-    @staticmethod
-    def clMax4(ws, densitySeaLevel, vStall):
-        qStall = 0.5*densitySeaLevel*pow(vStall+4)
-        return (1/qStall)*ws
-
-    @staticmethod
-    def clMax5(ws, densitySeaLevel, vStall, qStall):
-        qStall = 0.5*densitySeaLevel*pow(vStall-4)
+    def clMax(ws, densitySeaLevel, vStall, vDelta):
+        qStall = 0.5*densitySeaLevel*pow(vStall+vDelta)
         return (1/qStall)*ws
         
 
