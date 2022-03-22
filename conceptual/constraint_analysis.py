@@ -4,11 +4,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 sys.path.append(os.path.realpath('.'))
 from config import config_data
-from resources.aircraft_functions import OptionalConstraints as con
+from resources.aircraft_functions import Constraints as con
 
 # Import section
 constraints = config_data['analyses']['constraint_analysis']
 parameters = constraints['parameters']
+optional = parameters['optional']
 
 # Import parameters
 atmospheric = parameters['atmospheric_conditions']
@@ -38,6 +39,10 @@ cdTakeOff = aerodynamics['cdTakeOff']
 
 # Execution section
 results = {'turn': [], 'rateOfClimb': [], 'takeOff': [], 'cruise': []}
+
+if optional['status'] == True:
+    results.update(optional['deltaRangeResults'])
+
 for ws in parameters['ws_range']:
     # Computing section
     turn = con.turn(ws, densitySeaLevel, vCruise, cdMin, loadFactor, kFactor)
@@ -46,8 +51,9 @@ for ws in parameters['ws_range']:
     cruise = con.cruise(ws, densitySeaLevel, vCruise, cdMin, kFactor)
 
     # Optional constraint section
-    if parameters['optional'] == True:
-        pass
+    if optional['status'] == True:
+        for delta in optional['deltaRange']:
+            print(delta)
 
     # Appending section
     results['rateOfClimb'] += [rateOfClimb]
