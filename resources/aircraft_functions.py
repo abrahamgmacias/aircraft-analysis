@@ -413,7 +413,7 @@ class Constraints():
     # Optional method
     @staticmethod
     def clMax(ws, densitySeaLevel, vStall, vDelta):
-        qStall = 0.5*densitySeaLevel*pow(vStall+vDelta)
+        qStall = 0.5*densitySeaLevel*pow(vStall+vDelta, 2)
         return (1/qStall)*ws
         
 

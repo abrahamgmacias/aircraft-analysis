@@ -31,6 +31,7 @@ takeOffDistance = performance['takeOffDistance']
 groundFrictionCoefficient = performance['groundFrictionCoefficient']
 vVertical = performance['vVertical']
 vCruise = performance['vCruise']
+vStall = performance['vStall']
 
 cdMin = aerodynamics['cdMin']
 clMax = aerodynamics['clMax']
@@ -41,7 +42,7 @@ cdTakeOff = aerodynamics['cdTakeOff']
 results = {'turn': [], 'rateOfClimb': [], 'takeOff': [], 'cruise': []}
 
 if optional['status'] == True:
-    results.update(optional['deltaRangeResults'])
+    results['deltaRangeResults'] = []
 
 for ws in parameters['ws_range']:
     # Computing section
@@ -52,14 +53,18 @@ for ws in parameters['ws_range']:
 
     # Optional constraint section
     if optional['status'] == True:
+        deltaIndividual = []
         for delta in optional['deltaRange']:
-            print(delta)
+            clMax = con.clMax(ws, densitySeaLevel, vStall, delta)
+            deltaIndividual += [clMax]
+        results['deltaRangeResults'] += [deltaIndividual]
 
     # Appending section
     results['rateOfClimb'] += [rateOfClimb]
     results['takeOff'] += [takeOff]
     results['cruise'] += [cruise]
     results['turn'] += [turn]
+    
 
     
 

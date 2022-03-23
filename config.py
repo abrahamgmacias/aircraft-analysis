@@ -70,20 +70,13 @@ config_data = {
                                                                  'ws_range': np.linspace(30, 170, 171),
                                                                  'optional': {
                                                                             'status': True,
-                                                                            'deltaRange': [0, -2, 2, -4, 4],
-                                                                            'deltaRangeResults': {
-                                                                                                'deltaMinusFour': [],
-                                                                                                'deltaMinusTwo': [],
-                                                                                                'deltaZero': [],
-                                                                                                'deltaTwo': [],
-                                                                                                'deltaFour':[]
-                                                                            }
-                                                                 }
+                                                                            'deltaRange': [0, -2, 2, -4, 4]
                                                  },
 
                                                  'plotting': False,
                                                  'print_results': False,
                                                  'print_steps': False
                             }
+                        }
             }
 }
