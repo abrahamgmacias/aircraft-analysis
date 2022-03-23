@@ -17,6 +17,7 @@ aerodynamics = parameters['aerodynamics']
 performance = parameters['performance']
 propulsion = parameters['propulsion']
 aircraft = parameters['aircraft']
+wsRange = parameters['ws_range']
 wing = parameters['wing']
 
 densitySeaLevel = atmospheric['densitySeaLevel']
@@ -43,10 +44,12 @@ if parameters['print_steps']:
     print('Intializing constraint analysis...\n')
 
 results = {'turn': [], 'rateOfClimb': [], 'takeOff': [], 'cruise': []}
-if optional['status']:
-    results['deltaRangeResults'] = []
 
-for ws in parameters['ws_range']:
+if optional['status']:
+    for delta in optional['deltaRange']:
+        results[f'deltaRange{delta}'] = []
+
+for ws in wsRange:
     if parameters['print_steps']:
         print(f'Computing T/W for W/S = {ws}')
 
@@ -61,13 +64,9 @@ for ws in parameters['ws_range']:
 
     # Optional constraint section
     if optional['status'] == True:
-        deltaIndividual = []
-
         for delta in optional['deltaRange']:
             clMax = con.clMax(ws, densitySeaLevel, vStall, delta)
-            deltaIndividual += [clMax]
-
-        results['deltaRangeResults'] += [deltaIndividual]
+            results[f'deltaRange{delta}'] += [clMax]
 
     # Appending section
     results['rateOfClimb'] += [rateOfClimb]
@@ -75,14 +74,46 @@ for ws in parameters['ws_range']:
     results['cruise'] += [cruise]
     results['turn'] += [turn]
 
-if parameters['print_results']:
+if parameters['print_steps']:
     print('\nAnalysis finished, check results... \n')
 
 if parameters['print_results']:
     print(results)
 
+# Plotting section
 if parameters['plotting']:
-    pass
-    
+    plt.plot(wsRange, results['turn'])
+    plt.plot(wsRange, results['rateOfClimb'])
+    plt.plot(wsRange, results['takeOff'])
+    plt.plot(wsRange, results['cruise'])
 
+    if optional['status']:
+        for delta in optional['deltaRange']:
+            plt.plot(wsRange, results[f'deltaRange{delta}'])
+
+    plt.show()
+
+
+    
+# def plot(self):
+#         fig, ax1 = plt.subplots()
+#         ax1.plot(self.ws, self.turn(), color = 'black',label='Constant velocity turn')
+#         ax1.plot(self.ws, self.roc(), color = 'red',label='Rate of Climb')
+#         ax1.plot(self.ws, self.takeoff(), color = 'blue',label='Desired Takeoff Distance')
+#         ax1.plot(self.ws, self.cruise(), color = 'yellow',label='Desired cruise Airspeed')
+#         ax1.hlines(self.tw_real, 30, 170, colors='k', linestyles='dashed',label='T/W Real posible con Vcrucero')
+#         ax2 = ax1.twinx()
+#         ax2.set_ylabel('CLmax',fontsize=25)
+#         ax2.plot(self.ws, self.CLmax1(), color = 'k', linestyle='-.',label='Recta Vstall = 12 m/s')
+#         ax2.plot(self.ws, self.CLmax2(), color = 'b', linestyle='-.',label='Recta Vstall = 10 m/s')
+#         ax2.plot(self.ws, self.CLmax3(), color = 'r', linestyle='-.',label='Recta Vstall = 14 m/s')
+#         ax2.plot(self.ws, self.CLmax4(), color = 'magenta', linestyle='-.',label='Recta Vstall = 16 m/s')
+#         #ax2.plot(self.ws, self.CLmax5(), color = 'green', linestyle='-.',label='Recta Vstall = 8 m/s')
+#         plt.title('Constraint Diagram', fontsize = 25,fontweight='bold')
+#         ax1.set_ylabel('T/W', fontsize = 25)
+#         ax1.set_xlabel(' W/S (N/m^2)', fontsize = 25)
+#         ax1.legend()
+#         ax2.legend(loc='upper center')
+#         fig.tight_layout()
+#         plt.show()
     
