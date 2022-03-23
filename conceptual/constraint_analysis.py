@@ -80,40 +80,26 @@ if parameters['print_steps']:
 if parameters['print_results']:
     print(results)
 
-# Plotting section
+# Plotting section --- YET TO BE FUNCTIONAL
 if parameters['plotting']:
-    plt.plot(wsRange, results['turn'])
-    plt.plot(wsRange, results['rateOfClimb'])
-    plt.plot(wsRange, results['takeOff'])
-    plt.plot(wsRange, results['cruise'])
+    fig, ax1 = plt.subplots()
+    plt.title('Constraint Diagram', fontsize=25, fontweight='bold')
+    ax1.set_xlabel('W/S (N/m^2)', fontsize = 25)
+    ax1.set_ylabel('T/W', fontsize = 25)
+    ax1.legend()
+
+    ax1.plot(wsRange, results['turn'], color='black', label='Constant velocity turn')
+    ax1.plot(wsRange, results['rateOfClimb'], color='red', label='Rate of Climb')
+    ax1.plot(wsRange, results['takeOff'], color='blue', label='Desired Takeoff Distance')
+    ax1.plot(wsRange, results['cruise'], color='yellow', label='Desired cruise Airspeed')
+    # plt.hlines(wsRange, twReal, colors='k', linestyles='dashed', label='T/W Real posible con Vcrucero')
 
     if optional['status']:
+        ax2 = ax1.twinx()
+        ax2.legend(loc='upper center')
+        colors = ['k', 'b', 'r', 'magenta']
         for delta in optional['deltaRange']:
-            plt.plot(wsRange, results[f'deltaRange{delta}'])
+            # ax2.plot(wsRange, results[f'deltaRange{delta}'], color=pass, linestyle='-.', label=pass)
+            pass
 
     plt.show()
-
-
-    
-# def plot(self):
-#         fig, ax1 = plt.subplots()
-#         ax1.plot(self.ws, self.turn(), color = 'black',label='Constant velocity turn')
-#         ax1.plot(self.ws, self.roc(), color = 'red',label='Rate of Climb')
-#         ax1.plot(self.ws, self.takeoff(), color = 'blue',label='Desired Takeoff Distance')
-#         ax1.plot(self.ws, self.cruise(), color = 'yellow',label='Desired cruise Airspeed')
-#         ax1.hlines(self.tw_real, 30, 170, colors='k', linestyles='dashed',label='T/W Real posible con Vcrucero')
-#         ax2 = ax1.twinx()
-#         ax2.set_ylabel('CLmax',fontsize=25)
-#         ax2.plot(self.ws, self.CLmax1(), color = 'k', linestyle='-.',label='Recta Vstall = 12 m/s')
-#         ax2.plot(self.ws, self.CLmax2(), color = 'b', linestyle='-.',label='Recta Vstall = 10 m/s')
-#         ax2.plot(self.ws, self.CLmax3(), color = 'r', linestyle='-.',label='Recta Vstall = 14 m/s')
-#         ax2.plot(self.ws, self.CLmax4(), color = 'magenta', linestyle='-.',label='Recta Vstall = 16 m/s')
-#         #ax2.plot(self.ws, self.CLmax5(), color = 'green', linestyle='-.',label='Recta Vstall = 8 m/s')
-#         plt.title('Constraint Diagram', fontsize = 25,fontweight='bold')
-#         ax1.set_ylabel('T/W', fontsize = 25)
-#         ax1.set_xlabel(' W/S (N/m^2)', fontsize = 25)
-#         ax1.legend()
-#         ax2.legend(loc='upper center')
-#         fig.tight_layout()
-#         plt.show()
-    
