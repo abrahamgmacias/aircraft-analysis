@@ -67,7 +67,7 @@ config_data = {
                                                                            'cdTakeOff': 0.04
                                                                  },
 
-                                                                 'ws_range': np.linspace(30, 170, 171),
+                                                                 'ws_range': range(30, 170),
                                                                  'optional': {
                                                                             'status': True,
                                                                             'deltaRange': [0, -2, 2, -4, 4]
