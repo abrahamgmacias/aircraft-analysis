@@ -47,7 +47,7 @@ results = {'turn': [], 'rateOfClimb': [], 'takeOff': [], 'cruise': []}
 
 if optional['status']:
     for delta in optional['deltaRange']:
-        results[f'deltaRange{delta}'] = []
+        results[f'deltaRange{delta[0]}'] = []
 
 for ws in wsRange:
     if parameters['print_steps']:
@@ -65,8 +65,8 @@ for ws in wsRange:
     # Optional constraint section
     if optional['status'] == True:
         for delta in optional['deltaRange']:
-            clMax = con.clMax(ws, densitySeaLevel, vStall, delta)
-            results[f'deltaRange{delta}'] += [clMax]
+            clMax = con.clMax(ws, densitySeaLevel, vStall, delta[0])
+            results[f'deltaRange{delta[0]}'] += [clMax]
 
     # Appending section
     results['rateOfClimb'] += [rateOfClimb]
@@ -96,10 +96,11 @@ if parameters['plotting']:
 
     if optional['status']:
         ax2 = ax1.twinx()
+        ax2.set_ylabel('CLmax', fontsize=25)
         ax2.legend(loc='upper center')
-        colors = ['k', 'b', 'r', 'magenta']
-        for delta in optional['deltaRange']:
-            # ax2.plot(wsRange, results[f'deltaRange{delta}'], color=pass, linestyle='-.', label=pass)
-            pass
 
+        for delta, color, title in optional['deltaRange']:
+            ax2.plot(wsRange, results[f'deltaRange{delta}'], color=color, linestyle='-.', label=title)
+
+    fig.tight_layout()
     plt.show()
