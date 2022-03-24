@@ -70,10 +70,14 @@ config_data = {
                                                                  'ws_range': range(30, 170),
                                                                  'optional': {
                                                                             'status': True,
-                                                                            'deltaRange': [0, -2, 2, -4, 4]
+                                                                            'deltaRange': [(0, 'green', 'Recta Vstall = 8 m/s'),
+                                                                                           (-2, 'k', 'Recta Vstall = 12 m/s'),
+                                                                                           (2, 'b', 'Recta Vstall = 10 m/s'),
+                                                                                           (-4, 'r', 'Recta Vstall = 14 m/s'),
+                                                                                           (4, 'magenta', 'Recta Vstall = 16 m/s')]
                                                  },
 
-                                                 'plotting': False,
+                                                 'plotting': True,
                                                  'print_results': False,
                                                  'print_steps': False
                             }

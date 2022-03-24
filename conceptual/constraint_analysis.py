@@ -86,21 +86,22 @@ if parameters['plotting']:
     plt.title('Constraint Diagram', fontsize=25, fontweight='bold')
     ax1.set_xlabel('W/S (N/m^2)', fontsize = 25)
     ax1.set_ylabel('T/W', fontsize = 25)
-    ax1.legend()
 
     ax1.plot(wsRange, results['turn'], color='black', label='Constant velocity turn')
     ax1.plot(wsRange, results['rateOfClimb'], color='red', label='Rate of Climb')
     ax1.plot(wsRange, results['takeOff'], color='blue', label='Desired Takeoff Distance')
     ax1.plot(wsRange, results['cruise'], color='yellow', label='Desired cruise Airspeed')
     # plt.hlines(wsRange, twReal, colors='k', linestyles='dashed', label='T/W Real posible con Vcrucero')
+    # Take off does not work 
 
     if optional['status']:
         ax2 = ax1.twinx()
         ax2.set_ylabel('CLmax', fontsize=25)
-        ax2.legend(loc='upper center')
 
         for delta, color, title in optional['deltaRange']:
             ax2.plot(wsRange, results[f'deltaRange{delta}'], color=color, linestyle='-.', label=title)
+        ax2.legend()
 
+    ax1.legend(loc='upper center')
     fig.tight_layout()
     plt.show()
