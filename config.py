@@ -43,7 +43,7 @@ config_data = {
                                                                  'propulsion': {
                                                                            'maxPower': 900,
                                                                            'propellerEff': 0.8,
-                                                                           'thrustToWeight': 0.24
+                                                                           'thrustToWeightReal': 0.24
                                                                  },
 
                                                                  'aircraft': {

@@ -91,7 +91,7 @@ if parameters['plotting']:
     ax1.plot(wsRange, results['rateOfClimb'], color='red', label='Rate of Climb')
     ax1.plot(wsRange, results['takeOff'], color='blue', label='Desired Takeoff Distance')
     ax1.plot(wsRange, results['cruise'], color='yellow', label='Desired cruise Airspeed')
-    # plt.hlines(wsRange, twReal, colors='k', linestyles='dashed', label='T/W Real posible con Vcrucero')
+    plt.hlines(propulsion['thrustToWeightReal'], wsRange[0], wsRange[-1], colors='k', linestyles='dashed', label='T/W Real posible con Vcrucero')
     # Take off does not work 
 
     if optional['status']:
